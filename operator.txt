@@ -1,0 +1,33 @@
+[
+	{
+		"opName": "莱万汀",
+		"mainAttr": "intellect",
+		"secondaryAttr": "strength",
+		"attr": [
+			{
+				"level": 1,
+				"strength": 13,
+				"agility": 9,
+				"intellect": 22,
+				"will": 9,
+				"operatorAtk": 30
+			},
+			{
+				"level": 20,
+				"strength": 36,
+				"agility": 28,
+				"intellect": 55,
+				"will": 26,
+				"operatorAtk": 91
+			},
+			{
+				"level": 90,
+				"strength": 121,
+				"agility": 99,
+				"intellect": 177,
+				"will": 89,
+				"operatorAtk": 318
+			}
+		]
+	}
+]
