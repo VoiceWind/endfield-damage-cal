@@ -149,8 +149,8 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-  @media (max-width: 1200px) { .main-container { grid-template-columns: 1fr 2fr; } .col-right { grid-column: 1 / -1; } }
-  @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; padding: 10px; } .col-mid, .col-right { grid-column: 1; } .results-bar { grid-template-columns: repeat(3, 1fr); margin: 0 10px; padding: 10px; } .header { padding: 10px; } .header h1 { font-size: 15px; } }
+  @media (max-width: 1200px) { .main-container { grid-template-columns: 1fr 2fr; } .col-right { grid-column: 1 / -1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } }
+  @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; padding: 10px; } .col-mid { grid-column: 1; grid-row: auto; } .col-right { grid-column: 1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } .results-bar { grid-template-columns: repeat(3, 1fr); margin: 0 10px; padding: 10px; } .header { padding: 10px; } .header h1 { font-size: 15px; } }
   @media (max-width: 500px) { .results-bar { grid-template-columns: 1fr 1fr; } .result-value { font-size: 22px; } .form-row { grid-template-columns: 1fr 1fr; } }
   .elem-row { margin-bottom: 4px; }
   .elem-row.hidden-row { display: none !important; }
@@ -1651,7 +1651,7 @@
 
     // --- Build breakdown ---
     const br = [];
-    br.push(['攻击力', fmt(attack)]);
+    br.push(['—— 攻击力 ——', fmt(attack)]);
     br.push(['—— 技能倍率 ——', '']);
     // br.push([' 总倍率 %', fmt2(totalSkillMul)]);
     elemKeys.filter(e => skillMulByElem[e] > 0).forEach(e => {
