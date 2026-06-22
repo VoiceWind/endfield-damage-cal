@@ -219,32 +219,7 @@
           <label class="form-label">等级 <span class="unit">LV</span></label>
           <input type="number" class="form-input" id="level" value="0" onchange="calc()">
         </div>
-        <div class="form-group">
-          <label class="form-label">源石技艺强度 <span class="unit">ART</span></label>
-          <input type="number" class="form-input" id="arts" value="0" onchange="calc()">
-        </div>
-      </div>
-      <!-- Row: 四维属性 -->
-      <div class="form-row cols-4">
-        <div class="form-group">
-          <label class="form-label">力量 <span class="unit">STR</span></label>
-          <input type="number" class="form-input" id="strength" value="0" onchange="calc()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">敏捷 <span class="unit">AGI</span></label>
-          <input type="number" class="form-input" id="agility" value="0" onchange="calc()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">智识 <span class="unit">INT</span></label>
-          <input type="number" class="form-input" id="intellect" value="0" onchange="calc()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">意志 <span class="unit">WIL</span></label>
-          <input type="number" class="form-input" id="will" value="0" onchange="calc()">
-        </div>
-      </div>
-      <!-- Row: 主/副属性 + 伤害元素 -->
-      <div class="form-row">
+         <!-- Row: 主/副属性 + 伤害元素 -->
         <div class="form-group">
           <label class="form-label">主属性</label>
           <select class="form-input" id="mainAttr" onchange="calc()">
@@ -263,6 +238,50 @@
             <option value="will">意志 WIL</option>
           </select>
         </div>
+      </div>
+      <!-- Row: 四维属性 (2x2 grid with sub-sources) -->
+      <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 6px 12px;">
+        <div class="elem-row" data-elem="strength">
+          <div class="elem-row-main">
+            <span class="elem-label">力量 STR</span>
+            <input type="number" class="form-input small elem-base" data-elem="strength" value="0" onchange="calc()">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('strength')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="strength"></div>
+        </div>
+        <div class="elem-row" data-elem="agility">
+          <div class="elem-row-main">
+            <span class="elem-label">敏捷 AGI</span>
+            <input type="number" class="form-input small elem-base" data-elem="agility" value="0" onchange="calc()">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('agility')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="agility"></div>
+        </div>
+        <div class="elem-row" data-elem="intellect">
+          <div class="elem-row-main">
+            <span class="elem-label">智识 INT</span>
+            <input type="number" class="form-input small elem-base" data-elem="intellect" value="0" onchange="calc()">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('intellect')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="intellect"></div>
+        </div>
+        <div class="elem-row" data-elem="will">
+          <div class="elem-row-main">
+            <span class="elem-label">意志 WIL</span>
+            <input type="number" class="form-input small elem-base" data-elem="will" value="0" onchange="calc()">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('will')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="will"></div>
+        </div>
+      </div>
+      <!-- Row: 源石技艺强度 -->
+      <div class="elem-row" data-elem="arts">
+        <div class="elem-row-main">
+          <span class="elem-label">源石技艺强度 ART</span>
+          <input type="number" class="form-input small elem-base" data-elem="arts" value="0" onchange="calc()">
+          <button type="button" class="btn btn-sm" onclick="addElemSource('arts')">+</button>
+        </div>
+        <div class="elem-sources" data-elem="arts"></div>
       </div>
       <hr class="section-divider">
       <!-- Row: 攻击力基础 -->
@@ -389,60 +408,62 @@
           <input type="number" class="form-input small" id="abnormalLevel" value="0" step="0.1" onchange="calc()">
         </div>
       </div>
-      <div class="elem-row" data-elem="physKnockup">
+      <div class="elem-row" data-elem="physKnockup" data-skill-elem="physical">
         <div class="elem-row-main has-cb">
           <input type="checkbox" class="skill-cb" id="cbKnockup" onclick="toggleSkillSegments('physKnockup','cbKnockup')"><span class="elem-label">击飞 %</span>
-          <input type="number" class="form-input elem-base" data-elem="physKnockup" value="0" step="0.01" onchange="calc()">
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical" selected>物</option><option value="heat">灼</option><option value="electric">电</option><option value="cryo">冷</option><option value="nature">自</option>
-          </select>
+          <input type="number" class="form-input elem-base" data-elem="physKnockup" value="120" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">物理</span>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="knockupBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
         </div>
         <div class="elem-sources" data-elem="physKnockup"></div>
       </div>
-      <div class="elem-row" data-elem="physKnockdown">
+      <div class="elem-row" data-elem="physKnockdown" data-skill-elem="physical">
         <div class="elem-row-main has-cb">
           <input type="checkbox" class="skill-cb" id="cbKnockdown" onclick="toggleSkillSegments('physKnockdown','cbKnockdown')"><span class="elem-label">倒地 %</span>
-          <input type="number" class="form-input elem-base" data-elem="physKnockdown" value="0" step="0.01" onchange="calc()">
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical" selected>物</option><option value="heat">灼</option><option value="electric">电</option><option value="cryo">冷</option><option value="nature">自</option>
-          </select>
+          <input type="number" class="form-input elem-base" data-elem="physKnockdown" value="120" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">物理</span>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="knockdownBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
         </div>
         <div class="elem-sources" data-elem="physKnockdown"></div>
       </div>
-      <div class="elem-row" data-elem="physStrike">
+      <div class="elem-row" data-elem="physStrike" data-skill-elem="physical">
         <div class="elem-row-main has-cb">
           <input type="checkbox" class="skill-cb" id="cbStrike" onclick="toggleSkillSegments('physStrike','cbStrike')"><span class="elem-label">猛击 %</span>
-          <input type="number" class="form-input elem-base" data-elem="physStrike" value="0" step="0.01" onchange="calc()">
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical" selected>物</option><option value="heat">灼</option><option value="electric">电</option><option value="cryo">冷</option><option value="nature">自</option>
-          </select>
+          <input type="number" class="form-input elem-base" data-elem="physStrike" value="150" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">物理</span>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="strikeBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
         </div>
         <div class="elem-sources" data-elem="physStrike"></div>
       </div>
-      <div class="elem-row" data-elem="physArmorBrk">
+      <div class="elem-row" data-elem="physArmorBrk" data-skill-elem="physical">
         <div class="elem-row-main has-cb">
           <input type="checkbox" class="skill-cb" id="cbArmorBrk" onclick="toggleSkillSegments('physArmorBrk','cbArmorBrk')"><span class="elem-label">碎甲 %</span>
-          <input type="number" class="form-input elem-base" data-elem="physArmorBrk" value="0" step="0.01" onchange="calc()">
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical" selected>物</option><option value="heat">灼</option><option value="electric">电</option><option value="cryo">冷</option><option value="nature">自</option>
-          </select>
+          <input type="number" class="form-input elem-base" data-elem="physArmorBrk" value="50" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">物理</span>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="armorBrkBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
         </div>
         <div class="elem-sources" data-elem="physArmorBrk"></div>
       </div>
+      <div class="elem-row" data-elem="physIceBrk" data-skill-elem="physical">
+        <div class="elem-row-main has-cb">
+          <input type="checkbox" class="skill-cb" id="cbIceBrk" onclick="toggleSkillSegments('physIceBrk','cbIceBrk')"><span class="elem-label">碎冰 %</span>
+          <input type="number" class="form-input elem-base" data-elem="physIceBrk" value="120" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">物理</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
+          <input type="number" class="form-input" id="iceBrkBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
+        </div>
+        <div class="elem-sources" data-elem="physIceBrk"></div>
+      </div>
       <div class="elem-row" data-elem="magicAbnormalMulK">
         <div class="elem-row-main has-cb">
-          <input type="checkbox" class="skill-cb" id="cbMagicAb" onclick="toggleSkillSegments('magicAbnormalMulK','cbMagicAb')"><span class="elem-label">法术异常 %</span>
-          <input type="number" class="form-input elem-base" data-elem="magicAbnormalMulK" value="0" step="0.01" onchange="calc()">
+          <input type="checkbox" class="skill-cb" id="cbMagicAb" onclick="toggleSkillSegments('magicAbnormalMulK','cbMagicAb')"><span class="elem-label">法术异常<span class="magic-status" id="magicAbStatus"></span> %</span>
+          <input type="number" class="form-input elem-base" data-elem="magicAbnormalMulK" value="80" step="0.01" onchange="calc()">
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical">物理</option><option value="heat" selected>灼热</option><option value="electric">电磁</option><option value="cryo">寒冷</option><option value="nature">自然</option>
+            <option value="heat" selected>灼热</option><option value="electric">电磁</option><option value="cryo">寒冷</option><option value="nature">自然</option>
           </select>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="magicAbBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
@@ -452,14 +473,27 @@
       <div class="elem-row" data-elem="magicBurstMulK">
         <div class="elem-row-main has-cb">
           <input type="checkbox" class="skill-cb" id="cbMagicBurst" onclick="toggleSkillSegments('magicBurstMulK','cbMagicBurst')"><span class="elem-label">法术爆发 %</span>
-          <input type="number" class="form-input elem-base" data-elem="magicBurstMulK" value="0" step="0.01" onchange="calc()">
+          <input type="number" class="form-input elem-base" data-elem="magicBurstMulK" value="160" step="0.01" onchange="calc()">
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><select class="form-input skill-elem" style="width:68px;padding:2px 4px;font-size:10px;" onchange="onSkillElemChange(this)">
-            <option value="physical">物理</option><option value="heat" selected>灼热</option><option value="electric">电磁</option><option value="cryo">寒冷</option><option value="nature">自然</option>
+            <option value="heat" selected>灼热</option><option value="electric">电磁</option><option value="cryo">寒冷</option><option value="nature">自然</option>
           </select>
           <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
           <input type="number" class="form-input" id="magicBurstBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
         </div>
         <div class="elem-sources" data-elem="magicBurstMulK"></div>
+      </div>
+      <div class="elem-row" data-elem="burnDot" data-skill-elem="heat">
+        <div class="elem-row-main has-cb">
+          <input type="checkbox" class="skill-cb" id="cbBurnDot" onclick="toggleSkillSegments('burnDot','cbBurnDot')"><span class="elem-label">燃烧（持续） %</span>
+          <input type="number" class="form-input elem-base" data-elem="burnDot" value="12" step="0.01" onchange="calc()">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">伤害类型</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);border-radius:4px;padding:2px 8px;display:inline-block;text-align:center;width:68px;">灼热</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">效果提升</span>
+          <input type="number" class="form-input" id="burnBoost" value="1" step="0.01" onchange="calc()" style="width:55px;padding:3px 4px;font-size:11px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">持续</span>
+          <input type="number" class="form-input" id="burnDuration" value="10" step="0.1" onchange="calc()" style="width:50px;padding:3px 4px;font-size:11px;">
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">秒</span>
+        </div>
+        <div class="elem-sources" data-elem="burnDot"></div>
       </div>
       <input type="hidden" id="activeSkillType" value="battle">
     </div>
@@ -512,6 +546,14 @@
             <button type="button" class="btn btn-sm" onclick="addElemSource('nature')">+</button>
           </div>
           <div class="elem-sources" data-elem="nature"></div>
+        </div>
+        <div class="elem-row" data-elem="magicDmg">
+          <div class="elem-row-main">
+            <span class="elem-label">法术伤害加成 %</span>
+            <input type="number" class="form-input small elem-base" data-elem="magicDmg" value="0" step="0.1" onchange="calc()" placeholder="%">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('magicDmg')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="magicDmg"></div>
         </div>
         <div class="elem-row" data-elem="allDmg">
           <div class="elem-row-main">
@@ -660,6 +702,14 @@
           <button type="button" class="btn btn-sm" onclick="addElemSource('suscPhysical')">+</button>
         </div>
         <div class="elem-sources" data-elem="suscPhysical"></div>
+      </div>
+      <div class="elem-row" data-elem="magicSusc">
+        <div class="elem-row-main">
+          <span class="elem-label">法术脆弱 %</span>
+          <input type="number" class="form-input small elem-base" data-elem="magicSusc" value="0" step="0.1" onchange="calc()" placeholder="%">
+          <button type="button" class="btn btn-sm" onclick="addElemSource('magicSusc')">+</button>
+        </div>
+        <div class="elem-sources" data-elem="magicSusc"></div>
       </div>
       <hr class="section-divider">
       <div class="section-label">易伤</div>
@@ -924,15 +974,16 @@
   // ─── Element source management ───
   let elemSourceCounter = 0;
   const elemSources = {
+    strength: [], agility: [], intellect: [], will: [], arts: [],
     pctGear: [], fixedBonus: [], critRate: [], critDmg: [],
     physical: [], heat: [], electric: [], cryo: [], nature: [],
-    allDmg: [], stagger: [], basicSkill: [], battleSkill: [], comboSkill: [], ultSkill: [],
+    allDmg: [], magicDmg: [], stagger: [], basicSkill: [], battleSkill: [], comboSkill: [], ultSkill: [],
     ampHeat: [], ampElectric: [], ampCryo: [], ampNature: [],
-    suscHeat: [], suscElectric: [], suscCryo: [], suscNature: [], suscPhysical: [],
+    suscHeat: [], suscElectric: [], suscCryo: [], suscNature: [], suscPhysical: [], magicSusc: [],
     redPhysical: [], redHeat: [], redElectric: [], redCryo: [], redNature: [], redAll: [],
     basicAtk: [], battleMulK: [], comboMulK: [], ultMulK: [],
-    physKnockup: [], physKnockdown: [], physStrike: [], physArmorBrk: [],
-    magicAbnormalMulK: [], magicBurstMulK: []
+    physKnockup: [], physKnockdown: [], physStrike: [], physArmorBrk: [], physIceBrk: [],
+    magicAbnormalMulK: [], magicBurstMulK: [], burnDot: []
   };
 
   function addElemSource(elem) {
@@ -941,7 +992,7 @@
     const row = document.createElement('div');
     row.className = 'elem-source-row';
     row.id = id;
-    const isSkill = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','magicAbnormalMulK','magicBurstMulK'].includes(elem);
+    const isSkill = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','physIceBrk','magicAbnormalMulK','magicBurstMulK','burnDot'].includes(elem);
     const isReduction = ['redPhysical','redHeat','redElectric','redCryo','redNature','redAll'].includes(elem);
     // Get default element from parent skill's dropdown
     let defElem = 'heat';
@@ -953,7 +1004,7 @@
     const elemOpts = ['physical','heat','electric','cryo','nature'].map(e =>
       `<option value="${e}"${e === defElem ? ' selected' : ''}>${e==='physical'?'物理':e==='heat'?'灼热':e==='electric'?'电磁':e==='cryo'?'寒冷':'自然'}</option>`
     ).join('');
-    const isAtk = ['pctGear','fixedBonus','critRate','critDmg'].includes(elem);
+    const isAtk = ['pctGear','fixedBonus','critRate','critDmg','strength','agility','intellect','will','arts'].includes(elem);
     const placeholder = isSkill ? '分段' : (isAtk ? '来源' : (isReduction ? '减伤' : '分段'));
     row.innerHTML = `
       <input type="checkbox" class="skill-cb">
@@ -1011,8 +1062,8 @@
 
   const skillMainCb = {
     basicAtk: 'cbBasicAtk', battleMulK: 'cbBattle', comboMulK: 'cbCombo', ultMulK: 'cbUlt',
-    physKnockup: 'cbKnockup', physKnockdown: 'cbKnockdown', physStrike: 'cbStrike', physArmorBrk: 'cbArmorBrk',
-    magicAbnormalMulK: 'cbMagicAb', magicBurstMulK: 'cbMagicBurst'
+    physKnockup: 'cbKnockup', physKnockdown: 'cbKnockdown', physStrike: 'cbStrike', physArmorBrk: 'cbArmorBrk', physIceBrk: 'cbIceBrk',
+    magicAbnormalMulK: 'cbMagicAb', magicBurstMulK: 'cbMagicBurst', burnDot: 'cbBurnDot'
   };
 
   function getElemTotal(elem) {
@@ -1070,7 +1121,7 @@
 
   function getSkillElements() {
     const elems = new Set();
-    const abKeys = ['physKnockup', 'physKnockdown', 'physStrike', 'physArmorBrk', 'magicAbnormalMulK', 'magicBurstMulK'];
+    const abKeys = ['physKnockup', 'physKnockdown', 'physStrike', 'physArmorBrk', 'physIceBrk', 'magicAbnormalMulK', 'magicBurstMulK', 'burnDot'];
     document.querySelectorAll('.elem-row[data-elem]').forEach(row => {
       const key = row.getAttribute('data-elem');
       if (abKeys.includes(key)) return;
@@ -1104,8 +1155,8 @@
     const allSkillTypeRows = new Set();
     activeSkillTypes.forEach(t => { if (skillKeysMap[t]) skillKeysMap[t].forEach(k => allSkillTypeRows.add(k)); });
 
-    const physAbRows = ['physKnockup', 'physKnockdown', 'physStrike', 'physArmorBrk'];
-    const magicAbRows = ['magicAbnormalMulK', 'magicBurstMulK'];
+    const physAbRows = ['physKnockup', 'physKnockdown', 'physStrike', 'physArmorBrk', 'physIceBrk'];
+    const magicAbRows = ['magicAbnormalMulK', 'magicBurstMulK', 'burnDot'];
     const abRows = [
       ...(hasPhysical ? physAbRows : []),
       ...(skillElems.some(e => e !== 'physical') ? magicAbRows : [])
@@ -1118,10 +1169,13 @@
 
     const visible = new Set([
       'allDmg', 'stagger', 'redAll', 'pctGear', 'fixedBonus', 'critRate', 'critDmg',
+      'strength', 'agility', 'intellect', 'will', 'arts',
       ...skillMulRows,
       ...allElRows,
       ...allSkillTypeRows,
     ]);
+    // Show 法术伤害加成 / 法术脆弱 only when non-physical elements are active
+    if (skillElems.some(e => e !== 'physical')) { visible.add('magicDmg'); visible.add('magicSusc'); }
 
     document.querySelectorAll('.elem-row[data-elem]').forEach(row => {
       const key = row.getAttribute('data-elem');
@@ -1206,7 +1260,22 @@
     if (container) {
       container.querySelectorAll('select').forEach(s => { s.value = sel.value; });
     }
+    updateMagicAbStatus();
     calc();
+  }
+
+  // ─── Dynamic status label for 法术异常 ───
+  const magicStatusMap = {
+    heat: '（燃烧）', electric: '（导电）', cryo: '（冻结）', nature: '（腐蚀）', physical: ''
+  };
+  function updateMagicAbStatus() {
+    const statusSpan = document.getElementById('magicAbStatus');
+    if (!statusSpan) return;
+    const row = document.querySelector('.elem-row[data-elem="magicAbnormalMulK"]');
+    if (!row) return;
+    const sel = row.querySelector('.elem-row-main select');
+    const elem = sel ? sel.value : 'heat';
+    statusSpan.textContent = magicStatusMap[elem] || '';
   }
 
   function getSkillTypeFromCb() {
@@ -1233,7 +1302,7 @@
 
   // ─── Init main checkboxes for non-skill elem rows ───
   function initMainCheckboxes() {
-    const skillKeys = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','magicAbnormalMulK','magicBurstMulK'];
+    const skillKeys = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','physIceBrk','magicAbnormalMulK','magicBurstMulK','burnDot'];
     document.querySelectorAll('.elem-row[data-elem]').forEach(row => {
       const elem = row.getAttribute('data-elem');
       if (skillKeys.includes(elem)) return; // Skills already have checkboxes
@@ -1251,15 +1320,15 @@
 
   // ─── Main Calculation ───
   function calc() {
-    for (const k of ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','magicAbnormalMulK','magicBurstMulK']) {
+    for (const k of ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','physIceBrk','magicAbnormalMulK','magicBurstMulK','burnDot']) {
       updateSkillTotal(k);
     }
 
-    const strength = g('strength');
-    const agility = g('agility');
-    const intellect = g('intellect');
-    const will = g('will');
-    const arts = g('arts');
+    const strength = getElemTotal('strength');
+    const agility = getElemTotal('agility');
+    const intellect = getElemTotal('intellect');
+    const will = getElemTotal('will');
+    const arts = getElemTotal('arts');
 
     const mainAttrId = gv('mainAttr');
     const secondaryAttrId = gv('secondaryAttr');
@@ -1330,6 +1399,8 @@
 
     // Shared multipliers
     const allDmgBonus = getElemTotal('allDmg') / 100;
+    const magicDmgBonus = getElemTotal('magicDmg') / 100;
+    const magicSuscBonus = getElemTotal('magicSusc') / 100;
     const staggerBonus = (gv('isStaggered') === 'yes') ? getElemTotal('stagger') / 100 : 0;
     // Base dealt (失衡易伤 applies to all)
     let baseDealt = 1;
@@ -1356,7 +1427,10 @@
       const row = document.querySelector(`.elem-row[data-elem="${key}"]`);
       if (!row) return 'heat';
       const sel = row.querySelector('.elem-row-main select');
-      return sel ? sel.value : 'heat';
+      if (sel) return sel.value;
+      const dataElem = row.getAttribute('data-skill-elem');
+      if (dataElem) return dataElem;
+      return 'heat';
     };
 
     const applySkillBoost = (key, val) => {
@@ -1368,8 +1442,10 @@
       if (key === 'physKnockdown') result *= (g('knockdownBoost') || 1);
       if (key === 'physStrike') { result *= (g('strikeBoost') || 1); result *= (1 + (g('abnormalLevel') || 0)); }
       if (key === 'physArmorBrk') { result *= (g('armorBrkBoost') || 1); result *= (1 + (g('abnormalLevel') || 0)); }
+      if (key === 'physIceBrk') { result *= (g('iceBrkBoost') || 1); result *= (1 + (g('abnormalLevel') || 0)); }
       if (key === 'magicAbnormalMulK') { result *= (g('magicAbBoost') || 1); result *= (1 + (g('abnormalLevel') || 0)); }
       if (key === 'magicBurstMulK') result *= (g('magicBurstBoost') || 1);
+      if (key === 'burnDot') { result *= (g('burnBoost') || 1); result *= (1 + (g('abnormalLevel') || 0)); }
       return result;
     };
 
@@ -1396,7 +1472,7 @@
     const skillCheckList = [
       ['battleMulK','cbBattle'],['comboMulK','cbCombo'],['ultMulK','cbUlt'],
       ['physKnockup','cbKnockup'],['physKnockdown','cbKnockdown'],['physStrike','cbStrike'],
-      ['physArmorBrk','cbArmorBrk'],['magicAbnormalMulK','cbMagicAb'],['magicBurstMulK','cbMagicBurst']
+      ['physArmorBrk','cbArmorBrk'],['physIceBrk','cbIceBrk'],['magicAbnormalMulK','cbMagicAb'],['magicBurstMulK','cbMagicBurst'],['burnDot','cbBurnDot']
     ];
     skillCheckList.forEach(([key, cbId]) => {
       const cb = document.getElementById(cbId);
@@ -1443,10 +1519,10 @@
       if (elem === 'physical') d += armorDealtVal * artsFactor * armorBoost;
       d = round4(d);
       const basicPart = round4(attack * (mul / 100) + basicDmgImprove);
-      const dmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus);
+      const dmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (elem !== 'physical' ? magicDmgBonus : 0));
       const linkBonus = round4(1 + comboBonus);
       const a = round4(1 + (ampMap[elem]||0));
-      const s = round4(1 + ((elem==='physical'?suscMap['physical']:suscMap[elem])||0));
+      const s = round4(1 + ((elem==='physical'?suscMap['physical']:suscMap[elem])||0) + (elem !== 'physical' ? magicSuscBonus : 0));
       const eR = round4(1 - (reductionMap[elem]||0));
       const fR = round4(1 - eR * dmgReduction);
       const r = round4(1 - ((resistMap[elem]||0)/100) + ((ignoreMap[elem]||0)/100));
@@ -1465,10 +1541,11 @@
       const hasChk = srcs.length > 0 && Array.from(srcs).some(r => { const cb2 = r.querySelector('.skill-cb'); return cb2 && cb2.checked; });
       return hasChk || (srcs.length === 0 && (mainCb.checked || mainCb.indeterminate));
     };
-    const isPhysAb = hasPhysical && (isSkillActive('physKnockup') || isSkillActive('physKnockdown') || isSkillActive('physStrike') || isSkillActive('physArmorBrk'));
+    const isPhysAb = hasPhysical && (isSkillActive('physKnockup') || isSkillActive('physKnockdown') || isSkillActive('physStrike') || isSkillActive('physArmorBrk') || isSkillActive('physIceBrk'));
     const isMagicAb = !hasPhysical && isSkillActive('magicAbnormalMulK');
     const isMagicBurst = isSkillActive('magicBurstMulK');
-    const isAbnormal = isPhysAb || isMagicAb || isMagicBurst;
+    const isBurnDot = isSkillActive('burnDot');
+    const isAbnormal = isPhysAb || isMagicAb || isMagicBurst || isBurnDot;
     if (isAbnormal) {
       const level = g('level');
       const levelCoef = isPhysAb ? round4(1 + (level - 1) / 392) : round4(1 + (level - 1) / 196);
@@ -1476,6 +1553,36 @@
       nonCritDmg = round4(nonCritDmg * levelCoef * artsCoef);
       critDmgResult = round4(nonCritDmg * (1 + critDmgVal));
       expectedDmg = round4(nonCritDmg * critExpect);
+    }
+
+    // ─── Burn DoT total ───
+    let burnTotal = 0;
+    const burnDuration = g('burnDuration');
+    if (isBurnDot && burnDuration > 0) {
+      const burnBase = getElemTotal('burnDot');
+      const burnMul = round4(burnBase * (g('burnBoost') || 1) * (1 + (g('abnormalLevel') || 0)));
+      if (burnMul > 0) {
+        const elem = 'heat';
+        let bd = baseDealt;
+        bd += elecDealtVal * artsFactor * elecBoost;
+        bd = round4(bd);
+        const burnBasicPart = round4(attack * (burnMul / 100) + basicDmgImprove);
+        const burnDmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + magicDmgBonus);
+        const burnLinkBonus = round4(1 + comboBonus);
+        const burnA = round4(1 + (ampMap[elem]||0));
+        const burnS = round4(1 + (suscMap[elem]||0) + magicSuscBonus);
+        const burnER = round4(1 - (reductionMap[elem]||0));
+        const burnFR = round4(1 - burnER * dmgReduction);
+        const burnR = round4(1 - ((resistMap[elem]||0)/100) + ((ignoreMap[elem]||0)/100));
+        let burnNonCrit = round4(burnBasicPart * burnDmgB * burnA * burnS * bd * burnLinkBonus * dmgReductionFromDef * burnR * (1 - burnFR));
+        if (isAbnormal) {
+          const level = g('level');
+          const levelCoef = isPhysAb ? round4(1 + (level - 1) / 392) : round4(1 + (level - 1) / 196);
+          const artsCoef = round4(1 + arts / 100);
+          burnNonCrit = round4(burnNonCrit * levelCoef * artsCoef);
+        }
+        burnTotal = round4(burnNonCrit * burnDuration);
+      }
     }
 
     // Filter visible rows
@@ -1500,9 +1607,9 @@
       br.push(['连击乘区', fmt2(1 + cbVal/100)]);
     }
     elemKeys.filter(e => skillMulByElem[e] > 0).forEach(e => {
-      const dmgB = round4(1 + (elemBonusMap[e]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus);
+      const dmgB = round4(1 + (elemBonusMap[e]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (e !== 'physical' ? magicDmgBonus : 0));
       const a = round4(1 + (ampMap[e]||0));
-      const s = round4(1 + ((e==='physical'?suscMap['physical']:suscMap[e])||0));
+      const s = round4(1 + ((e==='physical'?suscMap['physical']:suscMap[e])||0) + (e !== 'physical' ? magicSuscBonus : 0));
       const eR = round4(1 - (reductionMap[e]||0));
       const fR = round4(1 - eR * dmgReduction);
       const r = round4(1 - ((resistMap[e]||0)/100) + ((ignoreMap[e]||0)/100));
@@ -1523,6 +1630,10 @@
       br.push(['等级系数', fmt2(round4((g('level')-1)/(isPhysAb?392:196)+1))]);
       br.push(['源石技艺系数', fmt2(round4(1 + arts/100))]);
     }
+    if (burnTotal > 0) {
+      br.push(['—— 燃烧（持续） ——', '']);
+      br.push(['  燃烧总伤害', fmt(burnTotal)]);
+    }
     br.push(['—— 伤害结果 ——', '']);
     br.push(['常规伤害', fmt(nonCritDmg)]);
     br.push(['暴击伤害', fmt(critDmgResult)]);
@@ -1540,14 +1651,14 @@
 
   function resetAll() {
     const defaults = {
-      level: 0, strength: 0, agility: 0, intellect: 0, will: 0, arts: 0,
+      level: 0,
       weaponAtk: 0, operatorAtk: 0, pctWeaponVal: 0,
       basicDmgImprove: 0,
       staggerDealt: 30,
       elecDealt1: 12, elecDealt2: 16, elecDealt3: 20, elecDealt4: 24, elecBoost: 1,
       armorDealt1: 12, armorDealt2: 16, armorDealt3: 20, armorDealt4: 24, armorBoost: 1,
       defense: 100, battleBoost: 1, comboBoost: 1, ultBoost: 1, abnormalLevel: 0,
-      knockupBoost: 1, knockdownBoost: 1, strikeBoost: 1, armorBrkBoost: 1, magicAbBoost: 1, magicBurstBoost: 1,
+      knockupBoost: 1, knockdownBoost: 1, strikeBoost: 1, armorBrkBoost: 1, iceBrkBoost: 1, magicAbBoost: 1, magicBurstBoost: 1, burnBoost: 1, burnDuration: 10,
       heatRes: 0, elecRes: 0, cryoRes: 0, natureRes: 0,
       ignoreHeatRes: 0, ignoreElecRes: 0, ignoreCryoRes: 0, ignoreNatureRes: 0,
       linkBattle1: 30, linkBattle2: 45, linkBattle3: 60, linkBattle4: 75,
@@ -1599,6 +1710,31 @@
     const cbCritDmg = document.getElementById('cbMain_critDmg');
     if (cbCritDmg) cbCritDmg.checked = true;
 
+    // Stats default checked
+    ['strength','agility','intellect','will','arts'].forEach(s => {
+      const cb = document.getElementById('cbMain_' + s);
+      if (cb) cb.checked = true;
+    });
+
+    // Restore physical / magic abnormal defaults
+    const physKnockupBase = document.querySelector('.elem-base[data-elem="physKnockup"]');
+    if (physKnockupBase) physKnockupBase.value = 120;
+    const physKnockdownBase = document.querySelector('.elem-base[data-elem="physKnockdown"]');
+    if (physKnockdownBase) physKnockdownBase.value = 120;
+    const physStrikeBase = document.querySelector('.elem-base[data-elem="physStrike"]');
+    if (physStrikeBase) physStrikeBase.value = 150;
+    const physArmorBrkBase = document.querySelector('.elem-base[data-elem="physArmorBrk"]');
+    if (physArmorBrkBase) physArmorBrkBase.value = 50;
+    const physIceBrkBase = document.querySelector('.elem-base[data-elem="physIceBrk"]');
+    if (physIceBrkBase) physIceBrkBase.value = 120;
+    const magicAbBase = document.querySelector('.elem-base[data-elem="magicAbnormalMulK"]');
+    if (magicAbBase) magicAbBase.value = 80;
+    const magicBurstBase = document.querySelector('.elem-base[data-elem="magicBurstMulK"]');
+    if (magicBurstBase) magicBurstBase.value = 160;
+    const burnDotBase = document.querySelector('.elem-base[data-elem="burnDot"]');
+    if (burnDotBase) burnDotBase.value = 12;
+
+    updateMagicAbStatus();
     calc();
   }
 
@@ -1720,7 +1856,7 @@
             const id = 'esrc_' + (++elemSourceCounter);
             const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
             if (!container) return;
-            const isSkill = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','magicAbnormalMulK','magicBurstMulK'].includes(key);
+            const isSkill = ['basicAtk','battleMulK','comboMulK','ultMulK','physKnockup','physKnockdown','physStrike','physArmorBrk','physIceBrk','magicAbnormalMulK','magicBurstMulK','burnDot'].includes(key);
             const isReduction = ['redPhysical','redHeat','redElectric','redCryo','redNature','redAll'].includes(key);
             const row = document.createElement('div');
             row.className = 'elem-source-row';
@@ -1728,7 +1864,7 @@
             const elemOpts = ['physical','heat','electric','cryo','nature'].map(e =>
               `<option value="${e}"${(src.elem||'heat')===e?' selected':''}>${e==='physical'?'物理':e==='heat'?'灼热':e==='electric'?'电磁':e==='cryo'?'寒冷':'自然'}</option>`
             ).join('');
-            const isAtk = ['pctGear','fixedBonus'].includes(key);
+            const isAtk = ['pctGear','fixedBonus','strength','agility','intellect','will','arts'].includes(key);
             const ph = isSkill ? '分段' : (isAtk ? '来源' : (isReduction ? '减伤' : '分段'));
             row.innerHTML = `
               <input type="checkbox" class="skill-cb" ${src.checked!==false?'checked':''}>
@@ -1772,6 +1908,10 @@
     physKnockdown: [['倍率',120]],
     physStrike: [['倍率',150]],
     physArmorBrk: [['倍率',50]],
+    physIceBrk: [['倍率',120]],
+    magicAbnormalMulK: [['倍率',80]],
+    magicBurstMulK: [['倍率',160]],
+    burnDot: [['倍率',12]],
   };
 
   function populateSkillSources(elem) {
