@@ -1190,6 +1190,8 @@
           </div>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);white-space:nowrap;">效果提升</span>
           <input type="number" class="form-input small" id="elecBoost" value="1" step="0.01" onchange="calc()" style="width:80px;" placeholder="%">
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);white-space:nowrap;">触发者源石技艺强度</span>
+          <input type="number" class="form-input small" id="elecArts" value="0" step="0.1" onchange="calc()" style="width:70px;">
         </div>
         <div class="form-row tight">
           <div class="form-group"><label class="form-label">1级 <span class="unit">%</span></label><input type="number" class="form-input small" id="elecDealt1" value="12" step="0.1" onchange="calc()"></div>
@@ -1210,6 +1212,8 @@
           </div>
           <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);white-space:nowrap;">效果提升</span>
           <input type="number" class="form-input small" id="armorBoost" value="1" step="0.01" onchange="calc()" style="width:80px;" placeholder="%">
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);white-space:nowrap;">触发者源石技艺强度</span>
+          <input type="number" class="form-input small" id="armorArts" value="0" step="0.1" onchange="calc()" style="width:70px;">
         </div>
         <div class="form-row tight">
           <div class="form-group"><label class="form-label">1级 <span class="unit">%</span></label><input type="number" class="form-input small" id="armorDealt1" value="12" step="0.1" onchange="calc()"></div>
@@ -1297,6 +1301,10 @@
           <div class="form-group">
             <label class="form-label">持续时间 <span class="unit">秒</span></label>
             <input type="number" class="form-input small" id="corrosionDuration" value="0" step="0.1" min="0" max="15" onchange="calc()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">触发者源石技艺强度</label>
+            <input type="number" class="form-input small" id="corrosionArts" value="0" step="0.1" onchange="calc()">
           </div>
         </div>
       </div>
@@ -2647,6 +2655,7 @@
     };
     // ─── Corrosion: reduces all resistances ───
     let corrosionReduction = 0;
+    let corrosionArtsFactor = 1;
     if (gv('hasCorrosion') === 'yes') {
       const corrosionData = {
         1: { initial: 3.6, rate: 0.84, max: 12 },
@@ -2658,6 +2667,9 @@
       const d = corrosionData[lv];
       const dur = Math.min(15, Math.max(0, g('corrosionDuration') || 0));
       corrosionReduction = round4(Math.min(d.initial + d.rate * dur, d.max));
+      const corrosionArts = g('corrosionArts');
+      corrosionArtsFactor = corrosionArts > 0 ? round4(1 + 2 * corrosionArts / (corrosionArts + 300)) : 1;
+      corrosionReduction = round4(corrosionReduction * corrosionArtsFactor);
       for (const k of Object.keys(resistMap)) {
         resistMap[k] = round4(resistMap[k] - corrosionReduction);
       }
@@ -2687,6 +2699,10 @@
     const armorDealtVal = armorBreakDealtLevel > 0 ? [0,g('armorDealt1'),g('armorDealt2'),g('armorDealt3'),g('armorDealt4')][armorBreakDealtLevel]/100 : 0;
     const elecBoost = g('elecBoost') || 1;
     const armorBoost = g('armorBoost') || 1;
+    const elecArts = g('elecArts');
+    const armorArts = g('armorArts');
+    const elecArtsFactor = elecArts > 0 ? round4(1 + 2 * elecArts / (elecArts + 300)) : 1;
+    const armorArtsFactor = armorArts > 0 ? round4(1 + 2 * armorArts / (armorArts + 300)) : 1;
     // Per-element dealt
 
     const defense = g('defense');
@@ -2789,8 +2805,8 @@
       if (mul <= 0) return;
       // Per-element dealt
       let d = baseDealt;
-      if (elem !== 'physical') d += elecDealtVal * artsFactor * elecBoost;
-      if (elem === 'physical') d += armorDealtVal * artsFactor * armorBoost;
+      if (elem !== 'physical') d += elecDealtVal * elecArtsFactor * elecBoost;
+      if (elem === 'physical') d += armorDealtVal * armorArtsFactor * armorBoost;
       d = round4(d);
       const basicPart = round4(attack * (mul / 100) + basicDmgImprove);
       const dmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (elem !== 'physical' ? magicDmgBonus : 0) + (activeSkill !== 'basic' ? allSkillDmgBonus : 0));
@@ -2838,7 +2854,7 @@
       if (burnMul > 0) {
         const elem = 'heat';
         let bd = baseDealt;
-        bd += elecDealtVal * artsFactor * elecBoost;
+        bd += elecDealtVal * elecArtsFactor * elecBoost;
         bd = round4(bd);
         const burnBasicPart = round4(attack * (burnMul / 100) + basicDmgImprove);
         const burnDmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + magicDmgBonus + (activeSkill !== 'basic' ? allSkillDmgBonus : 0));
@@ -2885,26 +2901,28 @@
       const defOrRes = e === 'physical' ? ('') : (' 抗性' + fmt2(r));
       br.push(['  ' + elemNames[e], '伤害加成' + fmt2(dmgB) + ' 增幅' + fmt2(a) + ' 脆弱' + fmt2(s) + defOrRes + ' 减免' + fmt2(1-fR)]);
     });
-    if(gv('isStaggered') === 'yes' || electricDealtLevel > 0 || corrosionReduction > 0) {
+    if(gv('isStaggered') === 'yes' || electricDealtLevel > 0 || armorBreakDealtLevel > 0) {
       br.push(['—— 易伤 ——', '']);  
       if(gv('isStaggered') === 'yes'){
        br.push(['  失衡易伤', fmt2(baseDealt)]);
       }
      if (electricDealtLevel > 0) {
       const v = [0,g('elecDealt1'),g('elecDealt2'),g('elecDealt3'),g('elecDealt4')][electricDealtLevel]/100;
-      br.push(['  导电易伤 = ' + fmt2(v*100) + '% ×' + fmt2(artsFactor) + '×' + fmt2(g('elecBoost')||1), fmt2(1+v*artsFactor*(g('elecBoost')||1))]);
+      br.push(['  导电易伤 = ' + fmt2(v*100) + '% ×' + fmt2(elecArtsFactor) + '×' + fmt2(g('elecBoost')||1), fmt2(1+v*elecArtsFactor*(g('elecBoost')||1))]);
     }
       if (armorBreakDealtLevel > 0) {
         const v = [0,g('armorDealt1'),g('armorDealt2'),g('armorDealt3'),g('armorDealt4')][armorBreakDealtLevel]/100;
-        br.push(['  碎甲易伤 = ' + fmt2(v*100) + '% ×' + fmt2(artsFactor) + '×' + fmt2(g('armorBoost')||1), fmt2(1+v*artsFactor*(g('armorBoost')||1))]);
+        br.push(['  碎甲易伤 = ' + fmt2(v*100) + '% ×' + fmt2(armorArtsFactor) + '×' + fmt2(g('armorBoost')||1), fmt2(1+v*armorArtsFactor*(g('armorBoost')||1))]);
       }
     }
    
     // if (corrosionReduction > 0) {
-    //   br.push(['腐蚀抗性降低', '-' + fmt2(corrosionReduction)]);
+    // console.log(corrosionReduction)
+    // if (corrosionReduction > 0) {
+    //   br.push(['腐蚀抗性降低', '-' + fmt2(corrosionReduction) + ' (系数×' + fmt2(corrosionArtsFactor) + ')']);
     //   br.push(['  (灼热/电磁/寒冷/自然实际抗性', fmt2(resistMap['heat']) + '/' + fmt2(resistMap['electric']) + '/' + fmt2(resistMap['cryo']) + '/' + fmt2(resistMap['nature']) + ')']);
     // }
-    br.push(['—— 防御 ——', '']);  
+    br.push(['—— 防御 ——', '']);
     br.push(['  防御减伤 (防=' + defense + ')', fmt2(dmgReductionFromDef)]);
     if (isAbnormal) {
       br.push(['—— 异常系数 ——', '']);
@@ -2944,11 +2962,11 @@
       weaponAtk: 0, operatorAtk: 0, pctWeaponVal: 0,
       basicDmgImprove: 0,
       staggerDealt: 30,
-      elecDealt1: 12, elecDealt2: 16, elecDealt3: 20, elecDealt4: 24, elecBoost: 1,
-      armorDealt1: 12, armorDealt2: 16, armorDealt3: 20, armorDealt4: 24, armorBoost: 1,
+      elecDealt1: 12, elecDealt2: 16, elecDealt3: 20, elecDealt4: 24, elecBoost: 1, elecArts: 0,
+      armorDealt1: 12, armorDealt2: 16, armorDealt3: 20, armorDealt4: 24, armorBoost: 1, armorArts: 0,
       defense: 100, battleBoost: 1, comboBoost: 1, ultBoost: 1, abnormalLevel: 0,
       knockupBoost: 1, knockdownBoost: 1, strikeBoost: 1, armorBrkBoost: 1, iceBrkBoost: 1, magicAbBoost: 1, magicBurstBoost: 1, burnBoost: 1, burnDuration: 10,
-      heatRes: 0, elecRes: 0, cryoRes: 0, natureRes: 0, corrosionLevel: 1, corrosionDuration: 0,
+      heatRes: 0, elecRes: 0, cryoRes: 0, natureRes: 0, corrosionLevel: 1, corrosionDuration: 0, corrosionArts: 0,
       ignoreHeatRes: 0, ignoreElecRes: 0, ignoreCryoRes: 0, ignoreNatureRes: 0,
       linkBattle1: 30, linkBattle2: 45, linkBattle3: 60, linkBattle4: 75,
       linkUlt1: 20, linkUlt2: 30, linkUlt3: 40, linkUlt4: 50,
