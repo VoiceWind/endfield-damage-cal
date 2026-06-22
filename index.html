@@ -82,6 +82,8 @@
   .result-item:nth-child(2) .result-value { color: var(--red); }
   .result-item:nth-child(3) .result-value { color: var(--green); }
   .main-container { display: grid; grid-template-columns: 0.8fr 2.2fr 1fr; gap: 14px; padding: 16px 28px 40px; max-width: 1600px; margin: 0 auto; }
+  .col-left { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 12px; position: sticky; top: 135px; align-self: start; max-height: calc(100vh - 155px); z-index: 1; }
+  .col-left .card { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
   .col-mid { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 12px; }
   .col-right { grid-column: 3; grid-row: 1; position: sticky; top: 135px; align-self: start; max-height: calc(100vh - 155px); overflow-y: auto; z-index: 1; }
   .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
@@ -149,8 +151,8 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-  @media (max-width: 1200px) { .main-container { grid-template-columns: 1fr 2fr; } .col-right { grid-column: 1 / -1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } }
-  @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; padding: 10px; } .col-mid { grid-column: 1; grid-row: auto; } .col-right { grid-column: 1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } .results-bar { grid-template-columns: repeat(3, 1fr); margin: 0 10px; padding: 10px; } .header { padding: 10px; } .header h1 { font-size: 15px; } }
+  @media (max-width: 1200px) { .main-container { grid-template-columns: 1fr 2fr; } .col-left { grid-column: 1; grid-row: 1; position: sticky; top: 135px; max-height: calc(100vh - 155px); } .col-left .card { overflow-y: auto; min-height: 0; } .col-right { grid-column: 1 / -1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } }
+  @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; padding: 10px; } .col-left { grid-column: 1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } .col-mid { grid-column: 1; grid-row: auto; } .col-right { grid-column: 1; grid-row: auto; position: static; max-height: none; overflow-y: visible; } .results-bar { grid-template-columns: repeat(3, 1fr); margin: 0 10px; padding: 10px; } .header { padding: 10px; } .header h1 { font-size: 15px; } }
   @media (max-width: 500px) { .results-bar { grid-template-columns: 1fr 1fr; } .result-value { font-size: 22px; } .form-row { grid-template-columns: 1fr 1fr; } }
   .elem-row { margin-bottom: 4px; }
   .elem-row.hidden-row { display: none !important; }
@@ -204,6 +206,383 @@
   <input type="hidden" id="basicDmgImprove" value="0">
   <input type="hidden" id="pctWeaponVal" value="0">
 
+<div class="col-left">
+
+  <!-- SECTION 0: 干员武器装备 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-title"><span class="dot"></span>O · 干员武器装备</div>
+      <div class="card-collapse">▼</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row tight" style="margin-bottom:10px;">
+        <div class="form-group">
+          <label class="form-label">干员</label>
+          <select class="form-input" id="operatorSelect" onchange="onOperatorChange()">
+            <option value="">-- 选择干员 --</option>
+            <option value="op1">干员 A</option>
+            <option value="op2">干员 B</option>
+            <option value="op3">干员 C</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">干员等级</label>
+          <input type="number" class="form-input small" id="level" value="0" onchange="calc()">
+        </div>
+      </div>
+      <!-- 武器 -->
+      <div class="section-label">武器</div>
+      <div class="form-row tight" style="margin-bottom:6px;">
+        <div class="form-group">
+          <label class="form-label">武器选择</label>
+          <select class="form-input" id="weaponSelect" onchange="onWeaponChange()">
+            <option value="">-- 选择武器 --</option>
+            <option value="w1">武器 A</option>
+            <option value="w2">武器 B</option>
+            <option value="w3">武器 C</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">武器等级</label>
+          <input type="number" class="form-input small" id="weaponLevel" value="0" onchange="onWeaponLevelChange()">
+        </div>
+      </div>
+      <div class="form-row tight" style="margin-bottom:6px;">
+        <div class="form-group">
+          <label class="form-label">基础属性</label>
+          <select class="form-input" id="wpBaseAttr" onchange="onWeaponBaseAttrChange()">
+            <option value="strength">力量</option>
+            <option value="agility">敏捷</option>
+            <option value="intellect">智识</option>
+            <option value="will">意志</option>
+            <option value="mainAttr">主能力</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">基础属性 <span class="unit">等级</span></label>
+          <select class="form-input" id="wpBaseLevel" onchange="onWeaponAttrLevelChange()"><option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">属性值</label>
+          <input type="number" class="form-input small" id="wpBaseVal" value="0" onchange="onWeaponBaseValChange()">
+        </div>
+      </div>
+      <div class="form-row tight" style="margin-bottom:6px;">
+        <div class="form-group">
+          <label class="form-label">附加属性</label>
+          <select class="form-input" id="wpSubAttr" onchange="onWeaponSubAttrChange()">
+            <option value="">-- 无 --</option>
+            <option value="atkUp">攻击提升</option>
+            <option value="physDmgUp">物理伤害提升</option>
+            <option value="magicDmgUp">法术伤害提升</option>
+            <option value="heatDmgUp">灼热伤害提升</option>
+            <option value="elecDmgUp">电磁伤害提升</option>
+            <option value="cryoDmgUp">寒冷伤害提升</option>
+            <option value="natureDmgUp">自然伤害提升</option>
+            <option value="critRateUp">暴击率提升</option>
+            <option value="artsUp">源石技艺强度</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">附加属性 <span class="unit">等级</span></label>
+          <select class="form-input" id="wpSubLevel" onchange="onWeaponAttrLevelChange()"><option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">属性值</label>
+          <input type="number" class="form-input small" id="wpSubVal" value="0" onchange="onWeaponSubValChange()">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label">技能属性 <span class="unit">等级</span></label>
+        <select class="form-input" id="wpSkillLevel" onchange="calc()"><option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option></select>
+      </div>
+      <!-- 装备 -->
+      <div class="section-label">装备</div>
+      <!-- 护甲 -->
+      <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
+        <label class="form-label" style="margin-bottom:4px;">护甲</label>
+        <select class="form-input" id="equipArmor" onchange="calc()" style="margin-bottom:4px;">
+          <option value="">-- 选择护甲 --</option>
+          <option value="armor1">护甲 A</option>
+          <option value="armor2">护甲 B</option>
+          <option value="armor3">护甲 C</option>
+        </select>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">能力值1</label>
+            <select class="form-input" id="armorAb1" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="armorAb1Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="armorAb1Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">能力值2</label>
+            <select class="form-input" id="armorAb2" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="armorAb2Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="armorAb2Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">属性特效</label>
+            <select class="form-input" id="armorEffect" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+               <option value="mainAttr">主能力</option>
+              <option value="subAttr">副能力</option>
+              <option value="atk">攻击力</option>
+              <option value="critRate">暴击率</option>
+              <option value="arts">源石技艺强度</option>
+              <option value="physDmg">物理伤害加成</option>
+              <option value="magicDmg">法术伤害加成</option>
+              <option value="basicDmg">普通攻击伤害加成</option>
+              <option value="battleDmg">战技伤害加成</option>
+              <option value="comboDmg">连携技伤害加成</option>
+              <option value="ultDmg">终结技伤害加成</option>
+              <option value="cryoElecDmg">寒冷和电磁伤害加成</option>
+              <option value="heatNatureDmg">灼热和自然伤害加成</option>
+              <option value="allSkillDmg">所有技能伤害加成</option>
+              <option value="staggerDmg">对失衡目标伤害加成</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="armorRefine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">属性特性</label>
+            <input type="number" class="form-input small" id="armorTrait" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+        </div>
+      </div>
+      <!-- 护手 -->
+      <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
+        <label class="form-label" style="margin-bottom:4px;">护手</label>
+        <select class="form-input" id="equipGloves" onchange="calc()" style="margin-bottom:4px;">
+          <option value="">-- 选择护手 --</option>
+          <option value="gloves1">护手 A</option>
+          <option value="gloves2">护手 B</option>
+          <option value="gloves3">护手 C</option>
+        </select>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">能力值1</label>
+            <select class="form-input" id="glovesAb1" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="glovesAb1Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="glovesAb1Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">能力值2</label>
+            <select class="form-input" id="glovesAb2" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="glovesAb2Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="glovesAb2Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">属性特效</label>
+            <select class="form-input" id="glovesEffect" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+               <option value="mainAttr">主能力</option>
+              <option value="subAttr">副能力</option>
+              <option value="atk">攻击力</option>
+              <option value="critRate">暴击率</option>
+              <option value="arts">源石技艺强度</option>
+              <option value="physDmg">物理伤害加成</option>
+              <option value="magicDmg">法术伤害加成</option>
+              <option value="basicDmg">普通攻击伤害加成</option>
+              <option value="battleDmg">战技伤害加成</option>
+              <option value="comboDmg">连携技伤害加成</option>
+              <option value="ultDmg">终结技伤害加成</option>
+              <option value="cryoElecDmg">寒冷和电磁伤害加成</option>
+              <option value="heatNatureDmg">灼热和自然伤害加成</option>
+              <option value="allSkillDmg">所有技能伤害加成</option>
+              <option value="staggerDmg">对失衡目标伤害加成</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="glovesRefine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">属性特性</label>
+            <input type="number" class="form-input small" id="glovesTrait" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+        </div>
+      </div>
+      <!-- 配件一 -->
+      <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
+        <label class="form-label" style="margin-bottom:4px;">配件一</label>
+        <select class="form-input" id="equipAcc1" onchange="calc()" style="margin-bottom:4px;">
+          <option value="">-- 选择配件一 --</option>
+          <option value="acc1a">配件 A1</option>
+          <option value="acc1b">配件 B1</option>
+          <option value="acc1c">配件 C1</option>
+        </select>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">能力值1</label>
+            <select class="form-input" id="acc1Ab1" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="acc1Ab1Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc1Ab1Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">能力值2</label>
+            <select class="form-input" id="acc1Ab2" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="acc1Ab2Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc1Ab2Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">属性特效</label>
+            <select class="form-input" id="acc1Effect" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+               <option value="mainAttr">主能力</option>
+              <option value="subAttr">副能力</option>
+              <option value="atk">攻击力</option>
+              <option value="critRate">暴击率</option>
+              <option value="arts">源石技艺强度</option>
+              <option value="physDmg">物理伤害加成</option>
+              <option value="magicDmg">法术伤害加成</option>
+              <option value="basicDmg">普通攻击伤害加成</option>
+              <option value="battleDmg">战技伤害加成</option>
+              <option value="comboDmg">连携技伤害加成</option>
+              <option value="ultDmg">终结技伤害加成</option>
+              <option value="cryoElecDmg">寒冷和电磁伤害加成</option>
+              <option value="heatNatureDmg">灼热和自然伤害加成</option>
+              <option value="allSkillDmg">所有技能伤害加成</option>
+              <option value="staggerDmg">对失衡目标伤害加成</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc1Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">属性特性</label>
+            <input type="number" class="form-input small" id="acc1Trait" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+        </div>
+      </div>
+      <!-- 配件二 -->
+      <div style="margin-bottom:8px;">
+        <label class="form-label" style="margin-bottom:4px;">配件二</label>
+        <select class="form-input" id="equipAcc2" onchange="calc()" style="margin-bottom:4px;">
+          <option value="">-- 选择配件二 --</option>
+          <option value="acc2a">配件 A2</option>
+          <option value="acc2b">配件 B2</option>
+          <option value="acc2c">配件 C2</option>
+        </select>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">能力值1</label>
+            <select class="form-input" id="acc2Ab1" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="acc2Ab1Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc2Ab1Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">能力值2</label>
+            <select class="form-input" id="acc2Ab2" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="">--</option><option value="strength">力量</option><option value="agility">敏捷</option><option value="intellect">智识</option><option value="will">意志</option>
+            </select>
+            <input type="number" class="form-input small" id="acc2Ab2Val" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc2Ab2Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row tight">
+          <div class="form-group">
+            <label class="form-label">属性特效</label>
+            <select class="form-input" id="acc2Effect" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+               <option value="mainAttr">主能力</option>
+              <option value="subAttr">副能力</option>
+              <option value="atk">攻击力</option>
+              <option value="critRate">暴击率</option>
+              <option value="arts">源石技艺强度</option>
+              <option value="physDmg">物理伤害加成</option>
+              <option value="magicDmg">法术伤害加成</option>
+              <option value="basicDmg">普通攻击伤害加成</option>
+              <option value="battleDmg">战技伤害加成</option>
+              <option value="comboDmg">连携技伤害加成</option>
+              <option value="ultDmg">终结技伤害加成</option>
+              <option value="cryoElecDmg">寒冷和电磁伤害加成</option>
+              <option value="heatNatureDmg">灼热和自然伤害加成</option>
+              <option value="allSkillDmg">所有技能伤害加成</option>
+              <option value="staggerDmg">对失衡目标伤害加成</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">精锻等级</label>
+            <select class="form-input" id="acc2Refine" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+              <option value="0">--</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">属性特性</label>
+            <input type="number" class="form-input small" id="acc2Trait" value="0" onchange="calc()" style="padding:3px 4px;font-size:10px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <div class="col-mid">
 
   <!-- SECTION 1: 基础属性 (含攻击力 + 暴击) -->
@@ -213,13 +592,8 @@
       <div class="card-collapse">▼</div>
     </div>
     <div class="card-body">
-      <!-- Row: 干员 + 等级 + 源石技艺强度 -->
+      <!-- Row: 主/副属性 + 伤害元素 -->
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">等级 <span class="unit">LV</span></label>
-          <input type="number" class="form-input" id="level" value="0" onchange="calc()">
-        </div>
-         <!-- Row: 主/副属性 + 伤害元素 -->
         <div class="form-group">
           <label class="form-label">主属性</label>
           <select class="form-input" id="mainAttr" onchange="calc()">
@@ -617,6 +991,14 @@
           </div>
           <div class="elem-sources" data-elem="ultSkill"></div>
         </div>
+        <div class="elem-row" data-elem="allSkillDmg">
+          <div class="elem-row-main">
+            <span class="elem-label">全技能伤害加成 %</span>
+            <input type="number" class="form-input small elem-base" data-elem="allSkillDmg" value="0" step="0.1" onchange="calc()" placeholder="%">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('allSkillDmg')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="allSkillDmg"></div>
+        </div>
     </div>
   </div>
 
@@ -998,7 +1380,7 @@
     strength: [], agility: [], intellect: [], will: [], arts: [],
     pctGear: [], fixedBonus: [], critRate: [], critDmg: [],
     physical: [], heat: [], electric: [], cryo: [], nature: [],
-    allDmg: [], magicDmg: [], stagger: [], basicSkill: [], battleSkill: [], comboSkill: [], ultSkill: [],
+    allDmg: [], magicDmg: [], stagger: [], basicSkill: [], battleSkill: [], comboSkill: [], ultSkill: [], allSkillDmg: [],
     ampHeat: [], ampElectric: [], ampCryo: [], ampNature: [],
     suscHeat: [], suscElectric: [], suscCryo: [], suscNature: [], suscPhysical: [], magicSusc: [],
     redPhysical: [], redHeat: [], redElectric: [], redCryo: [], redNature: [], redAll: [],
@@ -1189,7 +1571,7 @@
     skillElems.forEach(e => { if (elKeys[e]) elKeys[e].forEach(k => allElRows.add(k)); });
 
     const visible = new Set([
-      'allDmg', 'stagger', 'redAll', 'pctGear', 'fixedBonus', 'critRate', 'critDmg',
+      'allDmg', 'allSkillDmg', 'stagger', 'redAll', 'pctGear', 'fixedBonus', 'critRate', 'critDmg',
       'strength', 'agility', 'intellect', 'will', 'arts',
       ...skillMulRows,
       ...allElRows,
@@ -1251,6 +1633,252 @@
     const isYes = gv('hasCorrosion') === 'yes';
     const detail = document.getElementById('corrosionDetail');
     if (detail) detail.style.display = isYes ? '' : 'none';
+    calc();
+  }
+
+  // ─── Operator data & auto-populate ───
+  const operatorData = {
+    op1: {
+      name: '干员 A', level: 90, operatorAtk: 318,
+      stats: { strength: 121, agility: 99, intellect: 177, will: 89 }
+    }
+  };
+  let operatorStatSourceIds = [];
+
+  function clearOperatorStatSources() {
+    // Remove DOM rows
+    operatorStatSourceIds.forEach(id => {
+      const row = document.getElementById(id);
+      if (row) row.remove();
+    });
+    operatorStatSourceIds = [];
+    // Remove any remaining operator-tagged rows + clean up elemSources arrays
+    ['strength','agility','intellect','will'].forEach(key => {
+      const el = document.querySelector(`.elem-sources[data-elem="${key}"]`);
+      if (el) {
+        el.querySelectorAll('.op-stat-source').forEach(r => r.remove());
+      }
+      // Clean elemSources array of operator-tagged entries
+      elemSources[key] = elemSources[key].filter(s => {
+        const row = document.getElementById(s.id);
+        return row && !row.classList.contains('op-stat-source');
+      });
+      // Reset elem-base (main checkbox stays checked)
+      const baseEl = document.querySelector(`.elem-base[data-elem="${key}"]`);
+      if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
+    });
+    // Reset operator-dependent fields
+    document.getElementById('operatorAtk').value = 0;
+  }
+
+  function onOperatorChange() {
+    clearOperatorStatSources();
+    const opId = gv('operatorSelect');
+    const data = operatorData[opId];
+    if (!data) { calc(); return; }
+
+    // Set level
+    document.getElementById('level').value = data.level;
+    // Set operator ATK
+    document.getElementById('operatorAtk').value = data.operatorAtk;
+
+    // Add stat sub-sources tagged as operator source
+    const statKeys = ['strength','agility','intellect','will'];
+    statKeys.forEach(key => {
+      const val = data.stats[key];
+      if (val === undefined) return;
+      const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
+      if (!container) return;
+      const id = 'esrc_' + (++elemSourceCounter);
+      const row = document.createElement('div');
+      row.className = 'elem-source-row op-stat-source';
+      row.id = id;
+      row.innerHTML = `
+        <input type="checkbox" class="skill-cb" checked>
+        <input type="text" class="form-input" value="干员" onchange="calc()" style="padding:3px 6px;font-size:11px;" placeholder="来源">
+        <input type="number" class="form-input" value="${val}" step="0.1" onchange="calc()" style="padding:3px 6px;font-size:11px;">
+        <button type="button" class="btn btn-sm" onclick="removeElemSource('${key}','${id}')">×</button>
+      `;
+      container.appendChild(row);
+      const subCb = row.querySelector('.skill-cb');
+      if (subCb) { subCb.addEventListener('change', calc); subCb.addEventListener('click', calc); }
+      elemSources[key].push({ id, row });
+      operatorStatSourceIds.push(id);
+
+      // Check the main checkbox for this stat
+      const mainCb = document.getElementById('cbMain_' + key);
+      if (mainCb) mainCb.checked = true;
+    });
+
+    calc();
+  }
+
+  // ─── Weapon data & auto-populate ───
+  const weaponData = {
+    w1: {
+      name: '武器 A',
+      baseLevel: 1, baseAttr: 'strength', baseVal: 90,
+      subLevel: 1, subAttr: '', subVal: 25,
+      skillLevel: 1,
+      atkLevels: { 90: 100 }
+    }
+  };
+  const weaponSubAttrTarget = {
+    atkUp: 'pctGear', physDmgUp: 'physical', magicDmgUp: 'magicDmg',
+    heatDmgUp: 'heat', elecDmgUp: 'electric', cryoDmgUp: 'cryo', natureDmgUp: 'nature',
+    critRateUp: 'critRate', artsUp: 'arts'
+  };
+  const wpStatMap = { strength: 'strength', agility: 'agility', intellect: 'intellect', will: 'will' };
+  let weaponSourceIds = [];
+
+  function computeWeaponAtk(wid, level) {
+    const data = weaponData[wid];
+    if (!data || !data.atkLevels) return 0;
+    return data.atkLevels[level] || 0;
+  }
+  function computeWeaponBaseVal(level) { return g('wpBaseVal'); }
+  function computeWeaponSubVal(level) { return g('wpSubVal'); }
+
+  function onWeaponLevelChange() {
+    const wid = gv('weaponSelect');
+    const wLv = parseInt(gv('weaponLevel')) || 0;
+    if (wid && wLv > 0) {
+      const atk = computeWeaponAtk(wid, wLv);
+      if (atk > 0) document.getElementById('weaponAtk').value = atk;
+    }
+    calc();
+  }
+
+  function onWeaponAttrLevelChange() {
+    const baseLv = parseInt(gv('wpBaseLevel')) || 0;
+    const subLv = parseInt(gv('wpSubLevel')) || 0;
+    if (baseLv > 0) document.getElementById('wpBaseVal').value = computeWeaponBaseVal(baseLv);
+    if (subLv > 0) document.getElementById('wpSubVal').value = computeWeaponSubVal(subLv);
+    onWeaponBaseValChange();
+    onWeaponSubValChange();
+    calc();
+  }
+
+  function clearWeaponSources(tag) {
+    const idsToRemove = tag
+      ? weaponSourceIds.filter(id => { const r = document.getElementById(id); return r && r.classList.contains('wp-source-' + tag); })
+      : [...weaponSourceIds];
+    idsToRemove.forEach(id => {
+      const row = document.getElementById(id);
+      if (row) row.remove();
+      weaponSourceIds = weaponSourceIds.filter(x => x !== id);
+    });
+    Object.keys(elemSources).forEach(key => {
+      elemSources[key] = elemSources[key].filter(s => {
+        const row = document.getElementById(s.id);
+        if (!row) return false;
+        if (!tag) return !row.classList.contains('wp-source');
+        return !row.classList.contains('wp-source-' + tag);
+      });
+    });
+  }
+
+  function applyWeaponSources(tag) {
+    const wid = gv('weaponSelect');
+    const data = weaponData[wid];
+    if (!data) return;
+    const wpName = data.name;
+
+    if (!tag || tag === 'base') {
+      const baseAttr = gv('wpBaseAttr');
+      const baseVal = g('wpBaseVal');
+      if (baseAttr && baseVal && wpStatMap[baseAttr]) {
+        addWeaponSourceRow(wpStatMap[baseAttr], wpName + '-基础属性', baseVal, true, 'base');
+        const mainCb = document.getElementById('cbMain_' + wpStatMap[baseAttr]);
+        if (mainCb) mainCb.checked = true;
+      }
+    }
+    if (!tag || tag === 'sub') {
+      const subAttr = gv('wpSubAttr');
+      const subVal = g('wpSubVal');
+      if (subAttr && subVal) {
+        const targetKey = weaponSubAttrTarget[subAttr];
+        if (targetKey) {
+          const isElemDmg = ['heat','electric','cryo','nature','physical','magicDmg'].includes(targetKey);
+          addWeaponSourceRow(targetKey, wpName + '-附加属性', subVal, !isElemDmg, 'sub');
+        }
+      }
+    }
+  }
+
+  function addWeaponSourceRow(elem, label, val, checked, tag) {
+    const container = document.querySelector(`.elem-sources[data-elem="${elem}"]`);
+    if (!container) return;
+    const id = 'esrc_' + (++elemSourceCounter);
+    const row = document.createElement('div');
+    row.className = 'elem-source-row wp-source wp-source-' + (tag || 'base');
+    row.id = id;
+    row.innerHTML = `
+      <input type="checkbox" class="skill-cb"${checked?' checked':''}>
+      <input type="text" class="form-input" value="${label}" onchange="calc()" style="padding:3px 6px;font-size:11px;" placeholder="来源">
+      <input type="number" class="form-input" value="${val}" step="0.1" onchange="calc()" style="padding:3px 6px;font-size:11px;">
+      <button type="button" class="btn btn-sm" onclick="removeElemSource('${elem}','${id}')">×</button>
+    `;
+    container.appendChild(row);
+    const subCb = row.querySelector('.skill-cb');
+    if (subCb) { subCb.addEventListener('change', calc); subCb.addEventListener('click', calc); }
+    elemSources[elem].push({ id, row });
+    weaponSourceIds.push(id);
+  }
+
+  // ─── Weapon attr change handlers ───
+  function onWeaponBaseAttrChange() {
+    clearWeaponSources('base');
+    applyWeaponSources('base');
+    calc();
+  }
+  function onWeaponSubAttrChange() {
+    clearWeaponSources('sub');
+    applyWeaponSources('sub');
+    calc();
+  }
+  function onWeaponBaseValChange() {
+    weaponSourceIds.forEach(id => {
+      const row = document.getElementById(id);
+      if (row && row.classList.contains('wp-source-base')) {
+        const numInput = row.querySelector('input[type="number"]');
+        if (numInput) numInput.value = g('wpBaseVal');
+      }
+    });
+    calc();
+  }
+  function onWeaponSubValChange() {
+    weaponSourceIds.forEach(id => {
+      const row = document.getElementById(id);
+      if (row && row.classList.contains('wp-source-sub')) {
+        const numInput = row.querySelector('input[type="number"]');
+        if (numInput) numInput.value = g('wpSubVal');
+      }
+    });
+    calc();
+  }
+
+  function onWeaponChange() {
+    clearWeaponSources();
+    const wid = gv('weaponSelect');
+    const data = weaponData[wid];
+    if (!data) { calc(); return; }
+
+    document.getElementById('wpBaseLevel').value = data.baseLevel;
+    document.getElementById('wpBaseAttr').value = data.baseAttr;
+    document.getElementById('wpBaseVal').value = data.baseVal;
+    document.getElementById('wpSubLevel').value = data.subLevel;
+    document.getElementById('wpSubAttr').value = data.subAttr || '';
+    document.getElementById('wpSubVal').value = data.subVal;
+    document.getElementById('wpSkillLevel').value = data.skillLevel;
+    // Auto-assign weapon ATK
+    const wLv = parseInt(gv('weaponLevel')) || 0;
+    if (wLv > 0) {
+      const atk = computeWeaponAtk(wid, wLv);
+      if (atk > 0) document.getElementById('weaponAtk').value = atk;
+    }
+
+    applyWeaponSources();
     calc();
   }
 
@@ -1458,6 +2086,7 @@
     const allDmgBonus = getElemTotal('allDmg') / 100;
     const magicDmgBonus = getElemTotal('magicDmg') / 100;
     const magicSuscBonus = getElemTotal('magicSusc') / 100;
+    const allSkillDmgBonus = getElemTotal('allSkillDmg') / 100;
     const staggerBonus = (gv('isStaggered') === 'yes') ? getElemTotal('stagger') / 100 : 0;
     // Base dealt (失衡易伤 applies to all)
     let baseDealt = 1;
@@ -1576,7 +2205,7 @@
       if (elem === 'physical') d += armorDealtVal * artsFactor * armorBoost;
       d = round4(d);
       const basicPart = round4(attack * (mul / 100) + basicDmgImprove);
-      const dmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (elem !== 'physical' ? magicDmgBonus : 0));
+      const dmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (elem !== 'physical' ? magicDmgBonus : 0) + (activeSkill !== 'basic' ? allSkillDmgBonus : 0));
       const linkBonus = round4(1 + comboBonus);
       const a = round4(1 + (ampMap[elem]||0));
       const s = round4(1 + ((elem==='physical'?suscMap['physical']:suscMap[elem])||0) + (elem !== 'physical' ? magicSuscBonus : 0));
@@ -1624,7 +2253,7 @@
         bd += elecDealtVal * artsFactor * elecBoost;
         bd = round4(bd);
         const burnBasicPart = round4(attack * (burnMul / 100) + basicDmgImprove);
-        const burnDmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + magicDmgBonus);
+        const burnDmgB = round4(1 + (elemBonusMap[elem]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + magicDmgBonus + (activeSkill !== 'basic' ? allSkillDmgBonus : 0));
         const burnLinkBonus = round4(1 + comboBonus);
         const burnA = round4(1 + (ampMap[elem]||0));
         const burnS = round4(1 + (suscMap[elem]||0) + magicSuscBonus);
@@ -1659,7 +2288,7 @@
     });
     br.push(['—— 各元素加成明细 ——', '']);
     elemKeys.filter(e => skillMulByElem[e] > 0).forEach(e => {
-      const dmgB = round4(1 + (elemBonusMap[e]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (e !== 'physical' ? magicDmgBonus : 0));
+      const dmgB = round4(1 + (elemBonusMap[e]||0) + skillBonusMap[activeSkill] + allDmgBonus + staggerBonus + (e !== 'physical' ? magicDmgBonus : 0) + (activeSkill !== 'basic' ? allSkillDmgBonus : 0));
       const a = round4(1 + (ampMap[e]||0));
       const s = round4(1 + ((e==='physical'?suscMap['physical']:suscMap[e])||0) + (e !== 'physical' ? magicSuscBonus : 0));
       const eR = round4(1 - (reductionMap[e]||0));
@@ -1754,6 +2383,25 @@
     onStaggerChange();
     document.getElementById('hasCorrosion').value = 'no';
     onCorrosionChange();
+    // Reset left-column selects
+    clearOperatorStatSources();
+    clearWeaponSources();
+    // Reset left-column selects
+    ['operatorSelect','weaponSelect','wpBaseAttr','wpSubAttr','equipArmor','equipGloves','equipAcc1','equipAcc2',
+     'armorAb1','armorAb2','armorEffect','armorRefine','armorAb1Refine','armorAb2Refine',
+     'glovesAb1','glovesAb2','glovesEffect','glovesRefine','glovesAb1Refine','glovesAb2Refine',
+     'acc1Ab1','acc1Ab2','acc1Effect','acc1Refine','acc1Ab1Refine','acc1Ab2Refine',
+     'acc2Ab1','acc2Ab2','acc2Effect','acc2Refine','acc2Ab1Refine','acc2Ab2Refine'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    // Reset left-column number inputs
+    ['wpBaseLevel','wpBaseVal','wpSubLevel','wpSubVal','wpSkillLevel','weaponLevel',
+     'armorAb1Val','armorAb2Val','armorTrait','glovesAb1Val','glovesAb2Val','glovesTrait',
+     'acc1Ab1Val','acc1Ab2Val','acc1Trait','acc2Ab1Val','acc2Ab2Val','acc2Trait'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '0';
+    });
 
     comboLevel = 0;
     lastAutoAttack = undefined;
