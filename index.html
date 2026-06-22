@@ -670,6 +670,25 @@
           </select>
         </div>
       </div>
+      <!-- Row: 主/副属性加成 -->
+      <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 6px 12px;">
+        <div class="elem-row" data-elem="mainAttrBonus">
+          <div class="elem-row-main">
+            <span class="elem-label">主属性加成 %</span>
+            <input type="number" class="form-input small elem-base" data-elem="mainAttrBonus" value="0" step="0.1" onchange="calc()" placeholder="%">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('mainAttrBonus')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="mainAttrBonus"></div>
+        </div>
+        <div class="elem-row" data-elem="subAttrBonus">
+          <div class="elem-row-main">
+            <span class="elem-label">副属性加成 %</span>
+            <input type="number" class="form-input small elem-base" data-elem="subAttrBonus" value="0" step="0.1" onchange="calc()" placeholder="%">
+            <button type="button" class="btn btn-sm" onclick="addElemSource('subAttrBonus')">+</button>
+          </div>
+          <div class="elem-sources" data-elem="subAttrBonus"></div>
+        </div>
+      </div>
       <!-- Row: 四维属性 (2x2 grid with sub-sources) -->
       <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 6px 12px;">
         <div class="elem-row" data-elem="strength">
@@ -1456,6 +1475,7 @@
   let elemSourceCounter = 0;
   const elemSources = {
     strength: [], agility: [], intellect: [], will: [], arts: [],
+    mainAttrBonus: [], subAttrBonus: [],
     pctGear: [], fixedBonus: [], critRate: [], critDmg: [],
     physical: [], heat: [], electric: [], cryo: [], nature: [],
     allDmg: [], magicDmg: [], stagger: [], basicSkill: [], battleSkill: [], comboSkill: [], ultSkill: [], allSkillDmg: [],
@@ -1616,6 +1636,39 @@
     }
   }
 
+  // Multiplicative total: ∏(1 + checkedVal/100), returns percentage
+  function getMultTotal(elem) {
+    const baseEl = document.querySelector(`.elem-base[data-elem="${elem}"]`);
+    const container = document.querySelector(`.elem-sources[data-elem="${elem}"]`);
+    const sources = container ? container.querySelectorAll('.elem-source-row') : [];
+    if (sources.length > 0) {
+      let product = 1;
+      let checkedCount = 0;
+      sources.forEach(row => {
+        const cb = row.querySelector('.skill-cb');
+        if (cb && !cb.checked) return;
+        checkedCount++;
+        const inputs = row.querySelectorAll('input[type="number"]');
+        if (inputs.length > 0) product *= (1 + (parseFloat(inputs[0].value) || 0) / 100);
+      });
+      const total = round4((product - 1) * 100);
+      if (baseEl) { baseEl.value = total; baseEl.readOnly = true; }
+      const mainCbId = 'cbMain_' + elem;
+      const mainCb = document.getElementById(mainCbId);
+      if (mainCb) {
+        if (checkedCount === 0) { mainCb.checked = false; mainCb.indeterminate = false; }
+        else if (checkedCount === sources.length) { mainCb.checked = true; mainCb.indeterminate = false; }
+        else { mainCb.checked = false; mainCb.indeterminate = true; }
+      }
+      return total;
+    } else {
+      if (baseEl) baseEl.readOnly = false;
+      const mainCb = document.getElementById('cbMain_' + elem);
+      if (mainCb && !mainCb.checked && !mainCb.indeterminate) return 0;
+      return baseEl ? round4(parseFloat(baseEl.value) || 0) : 0;
+    }
+  }
+
   function setCombo(level, btn) {
     comboLevel = level;
     btn.parentElement.querySelectorAll('.combo-btn').forEach(b => b.classList.remove('active'));
@@ -1688,6 +1741,7 @@
     const visible = new Set([
       'allDmg', 'allSkillDmg', 'stagger', 'redAll', 'pctGear', 'fixedBonus', 'critRate', 'critDmg',
       'strength', 'agility', 'intellect', 'will', 'arts',
+      'mainAttrBonus', 'subAttrBonus',
       ...skillMulRows,
       ...allElRows,
       ...allSkillTypeRows,
@@ -2328,12 +2382,8 @@
         const srcLabel = slot.slotName + '-' + equipName + '-' + et.label;
 
         if (effect === 'mainAttr' || effect === 'subAttr') {
-          const attrKey = effect === 'mainAttr' ? gv('mainAttr') : gv('secondaryAttr');
-          if (attrKey && wpStatMap[attrKey]) {
-            addEquipSourceRow(wpStatMap[attrKey], srcLabel, val, true, slot.prefix, 'trait');
-            const mainCb = document.getElementById('cbMain_' + wpStatMap[attrKey]);
-            if (mainCb) mainCb.checked = true;
-          }
+          const bonusTarget = effect === 'mainAttr' ? 'mainAttrBonus' : 'subAttrBonus';
+          addEquipSourceRow(bonusTarget, srcLabel, val, true, slot.prefix, 'trait');
         } else if (Array.isArray(et.target)) {
           et.target.forEach(t => {
             addEquipSourceRow(t, srcLabel, val, false, slot.prefix, 'trait');
@@ -2538,7 +2588,11 @@
     const mainAttr = attrMap[mainAttrId];
     const secondaryAttr = attrMap[secondaryAttrId];
 
-    const attrBonus = 1 + mainAttr * 0.005 + secondaryAttr * 0.002;
+    const mainAttrBonusPct = getMultTotal('mainAttrBonus');
+    const subAttrBonusPct = getMultTotal('subAttrBonus');
+    const mainAttrMult = 1 + mainAttrBonusPct / 100;
+    const subAttrMult = 1 + subAttrBonusPct / 100;
+    const attrBonus = 1 + mainAttr * 0.005 * mainAttrMult + secondaryAttr * 0.002 * subAttrMult;
 
     const weaponAtk = g('weaponAtk');
     const operatorAtk = g('operatorAtk');
@@ -2967,6 +3021,11 @@
     if (cbCritRate) cbCritRate.checked = true;
     const cbCritDmg = document.getElementById('cbMain_critDmg');
     if (cbCritDmg) cbCritDmg.checked = true;
+    // Main/sub attr bonus defaults
+    const mainAbBase = document.querySelector('.elem-base[data-elem="mainAttrBonus"]');
+    if (mainAbBase) mainAbBase.value = 0;
+    const subAbBase = document.querySelector('.elem-base[data-elem="subAttrBonus"]');
+    if (subAbBase) subAbBase.value = 0;
 
     // Stats default checked
     ['strength','agility','intellect','will','arts'].forEach(s => {
