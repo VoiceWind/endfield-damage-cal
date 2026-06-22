@@ -1,0 +1,42 @@
+[
+	{
+		"weaponName": "理性告别",
+		"attr": [
+			{"atk":30},
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,
+			{"atk":369}
+		],
+		"wpBaseAttr": "strength",
+		"baseAttr": [
+			{"wpBaseVal":16},
+			{"wpBaseVal":28},
+			{"wpBaseVal":41},
+			{"wpBaseVal":54},
+			{"wpBaseVal":67},
+			{"wpBaseVal":80},
+			{"wpBaseVal":92},
+			{"wpBaseVal":105},
+			{"wpBaseVal":124}
+		],
+		"wpSubAttr": "heatDmgUp",
+		"subAttr": [
+			{"wpSubVal":4.4},
+			{"wpSubVal":8.0},
+			{"wpSubVal":11.6},
+			{"wpSubVal":15.1},
+			{"wpSubVal":18.7},
+			{"wpSubVal":22.2},
+			{"wpSubVal":25.8},
+			{"wpSubVal":29.3},
+			{"wpSubVal":34.7}
+		],
+		"wpSkillLevel": 1
+	}
+]

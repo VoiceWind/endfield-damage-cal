@@ -4,30 +4,37 @@
 		"mainAttr": "intellect",
 		"secondaryAttr": "strength",
 		"attr": [
-			{
-				"level": 1,
-				"strength": 13,
-				"agility": 9,
-				"intellect": 22,
-				"will": 9,
-				"operatorAtk": 30
-			},
-			{
-				"level": 20,
-				"strength": 36,
-				"agility": 28,
-				"intellect": 55,
-				"will": 26,
-				"operatorAtk": 91
-			},
-			{
-				"level": 90,
-				"strength": 121,
-				"agility": 99,
-				"intellect": 177,
-				"will": 89,
-				"operatorAtk": 318
-			}
+			{"strength":13,"agility":9,"intellect":22,"will":9,"operatorAtk":30},
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			{"strength":36,"agility":28,"intellect":55,"will":26,"operatorAtk":91},
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			{"strength":121,"agility":99,"intellect":177,"will":89,"operatorAtk":318}
+		]
+	},
+	{
+		"opName": "狼卫",
+		"mainAttr": "strength",
+		"secondaryAttr": "agility",
+		"attr": [
+			{"strength":18,"agility":9,"intellect":9,"will":13,"operatorAtk":30},
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			{"strength":49,"agility":27,"intellect":27,"will":34,"operatorAtk":86},
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			null,null,null,null,null,null,null,null,null,
+			{"strength":161,"agility":95,"intellect":92,"will":111,"operatorAtk":294},
+			null,null,null,null,null,
+			{"strength":147,"agility":86,"intellect":84,"will":101,"operatorAtk":267}
 		]
 	}
 ]

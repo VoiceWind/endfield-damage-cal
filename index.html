@@ -220,14 +220,11 @@
           <label class="form-label">干员</label>
           <select class="form-input" id="operatorSelect" onchange="onOperatorChange()">
             <option value="">-- 选择干员 --</option>
-            <option value="op1">干员 A</option>
-            <option value="op2">干员 B</option>
-            <option value="op3">干员 C</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">干员等级</label>
-          <input type="number" class="form-input small" id="level" value="0" onchange="calc()">
+          <input type="number" class="form-input small" id="level" value="1" onchange="onLevelChange()">
         </div>
       </div>
       <!-- 武器 -->
@@ -237,9 +234,6 @@
           <label class="form-label">武器选择</label>
           <select class="form-input" id="weaponSelect" onchange="onWeaponChange()">
             <option value="">-- 选择武器 --</option>
-            <option value="w1">武器 A</option>
-            <option value="w2">武器 B</option>
-            <option value="w3">武器 C</option>
           </select>
         </div>
         <div class="form-group">
@@ -300,13 +294,24 @@
       <div class="section-label">装备</div>
       <!-- 护甲 -->
       <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
-        <label class="form-label" style="margin-bottom:4px;">护甲</label>
-        <select class="form-input" id="equipArmor" onchange="onEquipChange('armor')" style="margin-bottom:4px;">
-          <option value="">-- 选择护甲 --</option>
-          <option value="armor1">护甲 A</option>
-          <option value="armor2">护甲 B</option>
-          <option value="armor3">护甲 C</option>
-        </select>
+        <div class="form-row tight" style="margin-bottom:4px;">
+          <div class="form-group">
+            <label class="form-label">所属装备组</label>
+            <select class="form-input" id="armorGroup" onchange="onEquipChange('armor')">
+              <option value="">--</option>
+              <option value="旧锋">旧锋</option><option value="壤流">壤流</option><option value="清波">清波</option><option value="拓荒">拓荒</option><option value="碾骨">碾骨</option><option value="点剑">点剑</option><option value="50式应龙">50式应龙</option><option value="M.I.警用">M.I.警用</option><option value="动火用">动火用</option><option value="脉冲式">脉冲式</option><option value="轻超域">轻超域</option><option value="生物辅助">生物辅助</option><option value="长息">长息</option><option value="潮涌">潮涌</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">护甲</label>
+            <select class="form-input" id="equipArmor" onchange="onEquipChange('armor')">
+              <option value="">-- 选择护甲 --</option>
+              <option value="armor1">护甲 A</option>
+              <option value="armor2">护甲 B</option>
+              <option value="armor3">护甲 C</option>
+            </select>
+          </div>
+        </div>
         <div class="form-row tight">
           <div class="form-group">
             <label class="form-label">能力值1</label>
@@ -370,13 +375,24 @@
       </div>
       <!-- 护手 -->
       <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
-        <label class="form-label" style="margin-bottom:4px;">护手</label>
-        <select class="form-input" id="equipGloves" onchange="onEquipChange('gloves')" style="margin-bottom:4px;">
-          <option value="">-- 选择护手 --</option>
-          <option value="gloves1">护手 A</option>
-          <option value="gloves2">护手 B</option>
-          <option value="gloves3">护手 C</option>
-        </select>
+        <div class="form-row tight" style="margin-bottom:4px;">
+          <div class="form-group">
+            <label class="form-label">所属装备组</label>
+            <select class="form-input" id="glovesGroup" onchange="onEquipChange('gloves')">
+              <option value="">--</option>
+              <option value="旧锋">旧锋</option><option value="壤流">壤流</option><option value="清波">清波</option><option value="拓荒">拓荒</option><option value="碾骨">碾骨</option><option value="点剑">点剑</option><option value="50式应龙">50式应龙</option><option value="M.I.警用">M.I.警用</option><option value="动火用">动火用</option><option value="脉冲式">脉冲式</option><option value="轻超域">轻超域</option><option value="生物辅助">生物辅助</option><option value="长息">长息</option><option value="潮涌">潮涌</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">护手</label>
+            <select class="form-input" id="equipGloves" onchange="onEquipChange('gloves')">
+              <option value="">-- 选择护手 --</option>
+              <option value="gloves1">护手 A</option>
+              <option value="gloves2">护手 B</option>
+              <option value="gloves3">护手 C</option>
+            </select>
+          </div>
+        </div>
         <div class="form-row tight">
           <div class="form-group">
             <label class="form-label">能力值1</label>
@@ -440,13 +456,24 @@
       </div>
       <!-- 配件一 -->
       <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px dotted var(--border);">
-        <label class="form-label" style="margin-bottom:4px;">配件一</label>
-        <select class="form-input" id="equipAcc1" onchange="onEquipChange('acc1')" style="margin-bottom:4px;">
-          <option value="">-- 选择配件一 --</option>
-          <option value="acc1a">配件 A1</option>
-          <option value="acc1b">配件 B1</option>
-          <option value="acc1c">配件 C1</option>
-        </select>
+        <div class="form-row tight" style="margin-bottom:4px;">
+          <div class="form-group">
+            <label class="form-label">所属装备组</label>
+            <select class="form-input" id="acc1Group" onchange="onEquipChange('acc1')">
+              <option value="">--</option>
+              <option value="旧锋">旧锋</option><option value="壤流">壤流</option><option value="清波">清波</option><option value="拓荒">拓荒</option><option value="碾骨">碾骨</option><option value="点剑">点剑</option><option value="50式应龙">50式应龙</option><option value="M.I.警用">M.I.警用</option><option value="动火用">动火用</option><option value="脉冲式">脉冲式</option><option value="轻超域">轻超域</option><option value="生物辅助">生物辅助</option><option value="长息">长息</option><option value="潮涌">潮涌</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">配件一</label>
+            <select class="form-input" id="equipAcc1" onchange="onEquipChange('acc1')">
+              <option value="">-- 选择配件一 --</option>
+              <option value="acc1a">配件 A1</option>
+              <option value="acc1b">配件 B1</option>
+              <option value="acc1c">配件 C1</option>
+            </select>
+          </div>
+        </div>
         <div class="form-row tight">
           <div class="form-group">
             <label class="form-label">能力值1</label>
@@ -510,13 +537,24 @@
       </div>
       <!-- 配件二 -->
       <div style="margin-bottom:8px;">
-        <label class="form-label" style="margin-bottom:4px;">配件二</label>
-        <select class="form-input" id="equipAcc2" onchange="onEquipChange('acc2')" style="margin-bottom:4px;">
-          <option value="">-- 选择配件二 --</option>
-          <option value="acc2a">配件 A2</option>
-          <option value="acc2b">配件 B2</option>
-          <option value="acc2c">配件 C2</option>
-        </select>
+        <div class="form-row tight" style="margin-bottom:4px;">
+          <div class="form-group">
+            <label class="form-label">所属装备组</label>
+            <select class="form-input" id="acc2Group" onchange="onEquipChange('acc2')">
+              <option value="">--</option>
+              <option value="旧锋">旧锋</option><option value="壤流">壤流</option><option value="清波">清波</option><option value="拓荒">拓荒</option><option value="碾骨">碾骨</option><option value="点剑">点剑</option><option value="50式应龙">50式应龙</option><option value="M.I.警用">M.I.警用</option><option value="动火用">动火用</option><option value="脉冲式">脉冲式</option><option value="轻超域">轻超域</option><option value="生物辅助">生物辅助</option><option value="长息">长息</option><option value="潮涌">潮涌</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">配件二</label>
+            <select class="form-input" id="equipAcc2" onchange="onEquipChange('acc2')">
+              <option value="">-- 选择配件二 --</option>
+              <option value="acc2a">配件 A2</option>
+              <option value="acc2b">配件 B2</option>
+              <option value="acc2c">配件 C2</option>
+            </select>
+          </div>
+        </div>
         <div class="form-row tight">
           <div class="form-group">
             <label class="form-label">能力值1</label>
@@ -575,6 +613,25 @@
           <div class="form-group">
             <label class="form-label">属性特性</label>
             <input type="number" class="form-input small" id="acc2Trait" value="0" onchange="syncEquipSourceVal('acc2','trait')" style="padding:3px 4px;font-size:10px;">
+          </div>
+        </div>
+      </div>
+      <div id="setBonus3Section" style="display:none;">
+        <div class="section-label">三件套组</div>
+        <div class="form-row tight" style="margin-bottom:8px;">
+          <div class="form-group">
+            <label class="form-label">套装效果</label>
+            <select class="form-input" id="setBonus3" onchange="applySetBonus3()">
+              <option value="">--</option>
+              <option value="atk">攻击力</option>
+              <option value="critRate">暴击率</option>
+              <option value="arts">源石技艺强度</option>
+              <option value="allSkillDmg">全技能伤害加成</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">基础效果值</label>
+            <input type="number" class="form-input small" id="setBonus3Val" value="0" onchange="applySetBonus3()">
           </div>
         </div>
       </div>
@@ -1366,6 +1423,27 @@
 </div>
 
 <script>
+  // ─── Embedded data (sync with operator.txt / weapon.txt) ───
+  // 0-indexed arrays: arr[level-1] → data. Sparse: only populated indices have data.
+  var EMBEDDED_OPERATORS = (function(){
+    var a=[{opName:"莱万汀",mainAttr:"intellect",secondaryAttr:"strength",attr:[]},{opName:"狼卫",mainAttr:"strength",secondaryAttr:"agility",attr:[]}];
+    a[0].attr[0]={strength:13,agility:9,intellect:22,will:9,operatorAtk:30};
+    a[0].attr[19]={strength:36,agility:28,intellect:55,will:26,operatorAtk:91};
+    a[0].attr[89  ]={strength:121,agility:99,intellect:177,will:89,operatorAtk:318};
+    a[1].attr[0]={strength:18,agility:9,intellect:9,will:13,operatorAtk:30};
+    a[1].attr[19]={strength:49,agility:27,intellect:27,will:34,operatorAtk:86};
+    a[1].attr[89]={strength:161,agility:95,intellect:92,will:111,operatorAtk:294};
+    return a;
+  })();
+  var EMBEDDED_WEAPONS = (function(){
+    var w=[{weaponName:"理性告别",attr:[],wpBaseAttr:"strength",baseAttr:[],wpSubAttr:"heatDmgUp",subAttr:[],wpSkillLevel:1}];
+    w[0].attr[0]={atk:30};
+    w[0].attr[79]={atk:369};
+    for(var i=0;i<9;i++) w[0].baseAttr[i]={wpBaseVal:[16,28,41,54,67,80,92,105,124][i]};
+    for(var i=0;i<9;i++) w[0].subAttr[i]={wpSubVal:[4.4,8.0,11.6,15.1,18.7,22.2,25.8,29.3,34.7][i]};
+    return w;
+  })();
+
   let comboLevel = 0;
   let electricDealtLevel = 0;
   let armorBreakDealtLevel = 0;
@@ -1438,17 +1516,30 @@
       });
       equipSourceIds = equipSourceIds.filter(x => x !== id);
     }
+    // If removing a set bonus source, clean up tracking
+    if (row.classList.contains('setbonus3-source')) {
+      setBonus3SourceId = null;
+    }
     // If removing a weapon source, clean up tracking
     if (row.classList.contains('wp-source')) {
       weaponSourceIds = weaponSourceIds.filter(x => x !== id);
     }
     row.remove();
     elemSources[elem] = elemSources[elem].filter(s => s.id !== id);
-    // Reset elem-base if no sub-sources remain
+    // Force elem-base update: sum remaining checked sub-sources, or reset if empty
     const container = document.querySelector(`.elem-sources[data-elem="${elem}"]`);
-    const remaining = container ? container.querySelectorAll('.elem-source-row').length : 0;
-    if (remaining === 0) {
-      const baseEl = document.querySelector(`.elem-base[data-elem="${elem}"]`);
+    const sources = container ? container.querySelectorAll('.elem-source-row') : [];
+    const baseEl = document.querySelector(`.elem-base[data-elem="${elem}"]`);
+    if (sources.length > 0) {
+      let total = 0;
+      sources.forEach(r => {
+        const cb = r.querySelector('.skill-cb');
+        if (cb && !cb.checked) return;
+        const inputs = r.querySelectorAll('input[type="number"]');
+        if (inputs.length > 0) total += parseFloat(inputs[0].value) || 0;
+      });
+      if (baseEl) { baseEl.value = round4(total); baseEl.readOnly = true; }
+    } else {
       if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
     }
     calc();
@@ -1661,55 +1752,97 @@
   }
 
   // ─── Operator data & auto-populate ───
-  const operatorData = {
-    op1: {
-      name: '干员 A', level: 90, operatorAtk: 318,
-      stats: { strength: 121, agility: 99, intellect: 177, will: 89 }
-    }
-  };
+  // ─── Operator data (loaded from operator.txt) ───
+  let operatorList = [];
   let operatorStatSourceIds = [];
 
+  function loadOperators() {
+    const sel = document.getElementById('operatorSelect');
+    if (!sel) return;
+    function populate(data) {
+      operatorList = data;
+      while (sel.options.length > 1) sel.remove(1);
+      data.forEach((op, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = op.opName;
+        sel.appendChild(opt);
+      });
+    }
+    // Synchronous: always load embedded data immediately
+    if (typeof EMBEDDED_OPERATORS !== 'undefined') {
+      populate(EMBEDDED_OPERATORS);
+    }
+    // Async: try to refresh from operator.txt (only works via http://, not file://)
+    fetch('operator.txt')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => { populate(data); })
+      .catch(() => {}); // Silently ignore fetch errors — embedded data already loaded
+  }
+
+  function getOperatorStats(opIdx, level) {
+    const op = operatorList[opIdx];
+    if (!op || !op.attr) return null;
+    // Exact match only (array is 0-indexed: level 1 → index 0)
+    const idx = level - 1;
+    if (idx >= 0 && idx < op.attr.length) return op.attr[idx];
+    return null;
+  }
+
   function clearOperatorStatSources() {
-    // Remove DOM rows
     operatorStatSourceIds.forEach(id => {
       const row = document.getElementById(id);
       if (row) row.remove();
     });
     operatorStatSourceIds = [];
-    // Remove any remaining operator-tagged rows + clean up elemSources arrays
     ['strength','agility','intellect','will'].forEach(key => {
       const el = document.querySelector(`.elem-sources[data-elem="${key}"]`);
       if (el) {
         el.querySelectorAll('.op-stat-source').forEach(r => r.remove());
       }
-      // Clean elemSources array of operator-tagged entries
       elemSources[key] = elemSources[key].filter(s => {
         const row = document.getElementById(s.id);
         return row && !row.classList.contains('op-stat-source');
       });
-      // Reset elem-base (main checkbox stays checked)
+      // Recalculate or reset elem-base
+      const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
+      const sources = container ? container.querySelectorAll('.elem-source-row') : [];
       const baseEl = document.querySelector(`.elem-base[data-elem="${key}"]`);
-      if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
+      if (sources.length > 0) {
+        let total = 0;
+        sources.forEach(r => {
+          const cb = r.querySelector('.skill-cb');
+          if (cb && !cb.checked) return;
+          const inputs = r.querySelectorAll('input[type="number"]');
+          if (inputs.length > 0) total += parseFloat(inputs[0].value) || 0;
+        });
+        if (baseEl) { baseEl.value = round4(total); baseEl.readOnly = true; }
+      } else {
+        if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
+      }
     });
-    // Reset operator-dependent fields
     document.getElementById('operatorAtk').value = 0;
   }
 
-  function onOperatorChange() {
+  function applyOperatorStats() {
     clearOperatorStatSources();
-    const opId = gv('operatorSelect');
-    const data = operatorData[opId];
-    if (!data) { calc(); return; }
+    const opIdx = parseInt(gv('operatorSelect'));
+    const level = Math.max(1, parseInt(gv('level')) || 1);
+    if (isNaN(opIdx) || !operatorList[opIdx]) { calc(); return; }
 
-    // Set level
-    document.getElementById('level').value = data.level;
-    // Set operator ATK
-    document.getElementById('operatorAtk').value = data.operatorAtk;
+    const op = operatorList[opIdx];
+    const stats = getOperatorStats(opIdx, level);
+    if (!stats) { calc(); return; }
 
-    // Add stat sub-sources tagged as operator source
+    // Set main/secondary attr
+    document.getElementById('mainAttr').value = op.mainAttr;
+    document.getElementById('secondaryAttr').value = op.secondaryAttr;
+    document.getElementById('operatorAtk').value = stats.operatorAtk;
+
+    // Add stat sub-sources
     const statKeys = ['strength','agility','intellect','will'];
     statKeys.forEach(key => {
-      const val = data.stats[key];
+      const val = stats[key];
       if (val === undefined) return;
       const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
       if (!container) return;
@@ -1719,7 +1852,7 @@
       row.id = id;
       row.innerHTML = `
         <input type="checkbox" class="skill-cb" checked>
-        <input type="text" class="form-input" value="干员" onchange="calc()" style="padding:3px 6px;font-size:11px;" placeholder="来源">
+        <input type="text" class="form-input" value="${op.opName}" onchange="calc()" style="padding:3px 6px;font-size:11px;" placeholder="来源">
         <input type="number" class="form-input" value="${val}" step="0.1" onchange="calc()" style="padding:3px 6px;font-size:11px;">
         <button type="button" class="btn btn-sm" onclick="removeElemSource('${key}','${id}')">×</button>
       `;
@@ -1728,8 +1861,6 @@
       if (subCb) { subCb.addEventListener('change', calc); subCb.addEventListener('click', calc); }
       elemSources[key].push({ id, row });
       operatorStatSourceIds.push(id);
-
-      // Check the main checkbox for this stat
       const mainCb = document.getElementById('cbMain_' + key);
       if (mainCb) mainCb.checked = true;
     });
@@ -1737,16 +1868,11 @@
     calc();
   }
 
-  // ─── Weapon data & auto-populate ───
-  const weaponData = {
-    w1: {
-      name: '武器 A',
-      baseLevel: 1, baseAttr: 'strength', baseVal: 90,
-      subLevel: 1, subAttr: '', subVal: 25,
-      skillLevel: 1,
-      atkLevels: { 90: 100 }
-    }
-  };
+  function onOperatorChange() { applyOperatorStats(); }
+  function onLevelChange() { applyOperatorStats(); }
+
+  // ─── Weapon data & auto-populate (loaded from weapon.txt / EMBEDDED_WEAPONS) ───
+  let weaponList = [];
   const weaponSubAttrTarget = {
     atkUp: 'pctGear', physDmgUp: 'physical', magicDmgUp: 'magicDmg',
     heatDmgUp: 'heat', elecDmgUp: 'electric', cryoDmgUp: 'cryo', natureDmgUp: 'nature',
@@ -1755,29 +1881,70 @@
   const wpStatMap = { strength: 'strength', agility: 'agility', intellect: 'intellect', will: 'will' };
   let weaponSourceIds = [];
 
-  function computeWeaponAtk(wid, level) {
-    const data = weaponData[wid];
-    if (!data || !data.atkLevels) return 0;
-    return data.atkLevels[level] || 0;
+  function loadWeapons() {
+    const sel = document.getElementById('weaponSelect');
+    if (!sel) return;
+    function populate(data) {
+      weaponList = data;
+      while (sel.options.length > 1) sel.remove(1);
+      data.forEach((wp, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = wp.weaponName;
+        sel.appendChild(opt);
+      });
+    }
+    // Synchronous: load embedded data immediately
+    if (typeof EMBEDDED_WEAPONS !== 'undefined') { populate(EMBEDDED_WEAPONS); }
+    // Async: try to refresh from weapon.txt (requires http://)
+    fetch('weapon.txt')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => { populate(data); })
+      .catch(() => {});
   }
-  function computeWeaponBaseVal(level) { return g('wpBaseVal'); }
-  function computeWeaponSubVal(level) { return g('wpSubVal'); }
+
+  // Direct array index lookup (0-indexed: level 1 → [0], level N → [N-1])
+  function getWeaponAtk(wpIdx, level) {
+    const wp = weaponList[wpIdx];
+    if (!wp || !wp.attr) return 0;
+    const idx = level - 1;
+    return (idx >= 0 && idx < wp.attr.length) ? (wp.attr[idx].atk || 0) : 0;
+  }
+  function getWeaponBaseVal(wpIdx, level) {
+    const wp = weaponList[wpIdx];
+    if (!wp || !wp.baseAttr) return 0;
+    const idx = level - 1;
+    return (idx >= 0 && idx < wp.baseAttr.length) ? (wp.baseAttr[idx].wpBaseVal || 0) : 0;
+  }
+  function getWeaponSubVal(wpIdx, level) {
+    const wp = weaponList[wpIdx];
+    if (!wp || !wp.subAttr) return 0;
+    const idx = level - 1;
+    return (idx >= 0 && idx < wp.subAttr.length) ? (wp.subAttr[idx].wpSubVal || 0) : 0;
+  }
 
   function onWeaponLevelChange() {
-    const wid = gv('weaponSelect');
+    const wIdx = parseInt(gv('weaponSelect'));
     const wLv = parseInt(gv('weaponLevel')) || 0;
-    if (wid && wLv > 0) {
-      const atk = computeWeaponAtk(wid, wLv);
-      if (atk > 0) document.getElementById('weaponAtk').value = atk;
+    if (!isNaN(wIdx) && weaponList[wIdx] && wLv > 0) {
+      document.getElementById('weaponAtk').value = getWeaponAtk(wIdx, wLv);
+    } else {
+      document.getElementById('weaponAtk').value = 0;
     }
     calc();
   }
 
   function onWeaponAttrLevelChange() {
+    const wIdx = parseInt(gv('weaponSelect'));
+    if (isNaN(wIdx) || !weaponList[wIdx]) {
+      document.getElementById('wpBaseVal').value = 0;
+      document.getElementById('wpSubVal').value = 0;
+      calc(); return;
+    }
     const baseLv = parseInt(gv('wpBaseLevel')) || 0;
     const subLv = parseInt(gv('wpSubLevel')) || 0;
-    if (baseLv > 0) document.getElementById('wpBaseVal').value = computeWeaponBaseVal(baseLv);
-    if (subLv > 0) document.getElementById('wpSubVal').value = computeWeaponSubVal(subLv);
+    document.getElementById('wpBaseVal').value = baseLv > 0 ? getWeaponBaseVal(wIdx, baseLv) : 0;
+    document.getElementById('wpSubVal').value = subLv > 0 ? getWeaponSubVal(wIdx, subLv) : 0;
     onWeaponBaseValChange();
     onWeaponSubValChange();
     calc();
@@ -1792,27 +1959,46 @@
       if (row) row.remove();
       weaponSourceIds = weaponSourceIds.filter(x => x !== id);
     });
+    const affectedElems = new Set();
     Object.keys(elemSources).forEach(key => {
+      const before = elemSources[key].length;
       elemSources[key] = elemSources[key].filter(s => {
         const row = document.getElementById(s.id);
         if (!row) return false;
         if (!tag) return !row.classList.contains('wp-source');
         return !row.classList.contains('wp-source-' + tag);
       });
+      if (elemSources[key].length !== before) affectedElems.add(key);
+    });
+    affectedElems.forEach(key => {
+      const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
+      const sources = container ? container.querySelectorAll('.elem-source-row') : [];
+      const baseEl = document.querySelector(`.elem-base[data-elem="${key}"]`);
+      if (sources.length > 0) {
+        let total = 0;
+        sources.forEach(r => {
+          const cb = r.querySelector('.skill-cb');
+          if (cb && !cb.checked) return;
+          const inputs = r.querySelectorAll('input[type="number"]');
+          if (inputs.length > 0) total += parseFloat(inputs[0].value) || 0;
+        });
+        if (baseEl) { baseEl.value = round4(total); baseEl.readOnly = true; }
+      } else {
+        if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
+      }
     });
   }
 
   function applyWeaponSources(tag) {
-    const wid = gv('weaponSelect');
-    const data = weaponData[wid];
-    if (!data) return;
-    const wpName = data.name;
+    const wIdx = parseInt(gv('weaponSelect'));
+    const wp = weaponList[wIdx];
+    if (!wp) return;
 
     if (!tag || tag === 'base') {
       const baseAttr = gv('wpBaseAttr');
       const baseVal = g('wpBaseVal');
       if (baseAttr && baseVal && wpStatMap[baseAttr]) {
-        addWeaponSourceRow(wpStatMap[baseAttr], wpName + '-基础属性', baseVal, true, 'base');
+        addWeaponSourceRow(wpStatMap[baseAttr], wp.weaponName + '-基础属性', baseVal, true, 'base');
         const mainCb = document.getElementById('cbMain_' + wpStatMap[baseAttr]);
         if (mainCb) mainCb.checked = true;
       }
@@ -1824,7 +2010,7 @@
         const targetKey = weaponSubAttrTarget[subAttr];
         if (targetKey) {
           const isElemDmg = ['heat','electric','cryo','nature','physical','magicDmg'].includes(targetKey);
-          addWeaponSourceRow(targetKey, wpName + '-附加属性', subVal, !isElemDmg, 'sub');
+          addWeaponSourceRow(targetKey, wp.weaponName + '-附加属性', subVal, !isElemDmg, 'sub');
         }
       }
     }
@@ -1850,7 +2036,6 @@
     weaponSourceIds.push(id);
   }
 
-  // ─── Weapon attr change handlers ───
   function onWeaponBaseAttrChange() {
     clearWeaponSources('base');
     applyWeaponSources('base');
@@ -1884,23 +2069,29 @@
 
   function onWeaponChange() {
     clearWeaponSources();
-    const wid = gv('weaponSelect');
-    const data = weaponData[wid];
-    if (!data) { calc(); return; }
-
-    document.getElementById('wpBaseLevel').value = data.baseLevel;
-    document.getElementById('wpBaseAttr').value = data.baseAttr;
-    document.getElementById('wpBaseVal').value = data.baseVal;
-    document.getElementById('wpSubLevel').value = data.subLevel;
-    document.getElementById('wpSubAttr').value = data.subAttr || '';
-    document.getElementById('wpSubVal').value = data.subVal;
-    document.getElementById('wpSkillLevel').value = data.skillLevel;
-    // Auto-assign weapon ATK
-    const wLv = parseInt(gv('weaponLevel')) || 0;
-    if (wLv > 0) {
-      const atk = computeWeaponAtk(wid, wLv);
-      if (atk > 0) document.getElementById('weaponAtk').value = atk;
+    const wIdx = parseInt(gv('weaponSelect'));
+    const wp = weaponList[wIdx];
+    if (!wp) {
+      document.getElementById('weaponAtk').value = 0;
+      document.getElementById('wpBaseVal').value = 0;
+      document.getElementById('wpSubVal').value = 0;
+      document.getElementById('weaponLevel').value = '';
+      calc(); return;
     }
+
+    document.getElementById('wpBaseAttr').value = wp.wpBaseAttr || '';
+    document.getElementById('wpSubAttr').value = wp.wpSubAttr || '';
+    document.getElementById('wpSkillLevel').value = String(wp.wpSkillLevel || '0');
+
+    // Default levels to 1
+    document.getElementById('wpBaseLevel').value = '1';
+    document.getElementById('wpSubLevel').value = '1';
+    document.getElementById('weaponLevel').value = '1';
+    // Values from data at level 1
+    document.getElementById('wpBaseVal').value = getWeaponBaseVal(wIdx, 1);
+    document.getElementById('wpSubVal').value = getWeaponSubVal(wIdx, 1);
+    // Weapon ATK at level 1 (exact match or interpolated)
+    document.getElementById('weaponAtk').value = getWeaponAtk(wIdx, 1);
 
     applyWeaponSources();
     calc();
@@ -2036,12 +2227,21 @@
       });
       if (elemSources[key].length !== before) affectedElems.add(key);
     });
-    // Reset elem-base for elements that lost all sub-sources
+    // Recalculate or reset elem-base for affected elements
     affectedElems.forEach(key => {
       const container = document.querySelector(`.elem-sources[data-elem="${key}"]`);
-      const remaining = container ? container.querySelectorAll('.elem-source-row').length : 0;
-      if (remaining === 0) {
-        const baseEl = document.querySelector(`.elem-base[data-elem="${key}"]`);
+      const sources = container ? container.querySelectorAll('.elem-source-row') : [];
+      const baseEl = document.querySelector(`.elem-base[data-elem="${key}"]`);
+      if (sources.length > 0) {
+        let total = 0;
+        sources.forEach(r => {
+          const cb = r.querySelector('.skill-cb');
+          if (cb && !cb.checked) return;
+          const inputs = r.querySelectorAll('input[type="number"]');
+          if (inputs.length > 0) total += parseFloat(inputs[0].value) || 0;
+        });
+        if (baseEl) { baseEl.value = round4(total); baseEl.readOnly = true; }
+      } else {
         if (baseEl) { baseEl.value = 0; baseEl.readOnly = false; }
       }
     });
@@ -2156,6 +2356,63 @@
 
   function onEquipChange(slotPrefix) {
     applyEquipSources(slotPrefix);
+    applySetBonus3();
+    calc();
+  }
+
+  // ─── 三件套组 ───
+  const setBonus3Target = {
+    atk: 'pctGear', critRate: 'critRate', arts: 'arts', allSkillDmg: 'allSkillDmg'
+  };
+  let setBonus3SourceId = null;
+
+  function applySetBonus3() {
+    // Count group occurrences
+    const groups = {};
+    equipSlots.forEach(s => {
+      const gv = document.getElementById(s.prefix + 'Group');
+      const g = gv ? gv.value : '';
+      if (g) groups[g] = (groups[g] || 0) + 1;
+    });
+    const matchedGroup = Object.keys(groups).find(g => groups[g] >= 3);
+    const section = document.getElementById('setBonus3Section');
+
+    // Remove old set bonus source
+    if (setBonus3SourceId) {
+      const oldRow = document.getElementById(setBonus3SourceId);
+      if (oldRow) oldRow.remove();
+      setBonus3SourceId = null;
+    }
+
+    if (!matchedGroup) {
+      if (section) section.style.display = 'none';
+      return;
+    }
+    if (section) section.style.display = '';
+
+    const effect = gv('setBonus3');
+    const val = g('setBonus3Val');
+    const targetKey = setBonus3Target[effect];
+    if (!effect || !targetKey || !val) return;
+
+    const container = document.querySelector(`.elem-sources[data-elem="${targetKey}"]`);
+    if (!container) return;
+    const id = 'esrc_' + (++elemSourceCounter);
+    const row = document.createElement('div');
+    row.className = 'elem-source-row setbonus3-source';
+    row.id = id;
+    const label = '三件套-' + matchedGroup + '-' + (document.getElementById('setBonus3').selectedOptions[0]?.text || effect);
+    row.innerHTML = `
+      <input type="checkbox" class="skill-cb" checked>
+      <input type="text" class="form-input" value="${label}" onchange="calc()" style="padding:3px 6px;font-size:11px;" placeholder="来源">
+      <input type="number" class="form-input" value="${val}" step="0.1" onchange="calc()" style="padding:3px 6px;font-size:11px;">
+      <button type="button" class="btn btn-sm" onclick="removeElemSource('${targetKey}','${id}')">×</button>
+    `;
+    container.appendChild(row);
+    const subCb = row.querySelector('.skill-cb');
+    if (subCb) { subCb.addEventListener('change', calc); subCb.addEventListener('click', calc); }
+    elemSources[targetKey].push({ id, row });
+    setBonus3SourceId = id;
     calc();
   }
 
@@ -2626,8 +2883,10 @@
   }
 
   function resetAll() {
+    loadOperators();
+    loadWeapons();
     const defaults = {
-      level: 0,
+      level: 1,
       weaponAtk: 0, operatorAtk: 0, pctWeaponVal: 0,
       basicDmgImprove: 0,
       staggerDealt: 30,
@@ -2666,7 +2925,8 @@
     clearEquipSources();
     // Reset left-column selects
     ['operatorSelect','weaponSelect','wpBaseAttr','wpSubAttr','equipArmor','equipGloves','equipAcc1','equipAcc2',
-     'armorAb1','armorAb2','armorEffect','armorRefine','armorAb1Refine','armorAb2Refine',
+     'armorGroup','glovesGroup','acc1Group','acc2Group',
+     'setBonus3','armorAb1','armorAb2','armorEffect','armorRefine','armorAb1Refine','armorAb2Refine',
      'glovesAb1','glovesAb2','glovesEffect','glovesRefine','glovesAb1Refine','glovesAb2Refine',
      'acc1Ab1','acc1Ab2','acc1Effect','acc1Refine','acc1Ab1Refine','acc1Ab2Refine',
      'acc2Ab1','acc2Ab2','acc2Effect','acc2Refine','acc2Ab1Refine','acc2Ab2Refine'].forEach(id => {
@@ -2674,7 +2934,7 @@
       if (el) el.value = '';
     });
     // Reset left-column number inputs
-    ['wpBaseLevel','wpBaseVal','wpSubLevel','wpSubVal','wpSkillLevel','weaponLevel',
+    ['wpBaseLevel','wpBaseVal','wpSubLevel','wpSubVal','wpSkillLevel','weaponLevel','setBonus3Val',
      'armorAb1Val','armorAb2Val','armorTrait','glovesAb1Val','glovesAb2Val','glovesTrait',
      'acc1Ab1Val','acc1Ab2Val','acc1Trait','acc2Ab1Val','acc2Ab2Val','acc2Trait'].forEach(id => {
       const el = document.getElementById(id);
@@ -2943,7 +3203,10 @@
   }
 
   // Initialize with reset state
+  loadOperators();
+  loadWeapons();
   resetAll();
+  applySetBonus3();
 
 </script>
 
