@@ -119,6 +119,25 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px; cursor: pointer;
   }
+  input.form-input[list] {
+    background-color: var(--bg-input);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px; cursor: pointer;
+  }
+  .combo-box { position: relative; }
+  .combo-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 200;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    max-height: 180px; overflow-y: auto; display: none; box-shadow: var(--shadow);
+  }
+  .combo-dropdown.show { display: block; }
+  .combo-option {
+    padding: 6px 10px; cursor: pointer; font-size: 13px; color: var(--text-primary);
+    font-family: var(--font-sans); border-bottom: 1px solid rgba(0,0,0,0.03);
+    transition: background 0.1s;
+  }
+  .combo-option:hover, .combo-option.active { background: var(--accent-glow); color: var(--accent); }
+  .combo-option:last-child { border-bottom: none; }
   .section-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
   .section-label {
     font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); font-weight: 500;
@@ -218,13 +237,14 @@
       <div class="form-row tight" style="margin-bottom:10px;">
         <div class="form-group">
           <label class="form-label">干员</label>
-          <select class="form-input" id="operatorSelect" onchange="onOperatorChange()">
-            <option value="">-- 选择干员 --</option>
-          </select>
+          <div class="combo-box" id="operatorCombo">
+            <input type="text" class="form-input" id="operatorSelect" placeholder="-- 选择干员 --" onchange="onOperatorChange()" autocomplete="off">
+            <div class="combo-dropdown"></div>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">干员等级</label>
-          <input type="number" class="form-input small" id="level" value="1" onchange="onLevelChange()">
+          <input type="number" class="form-input small" id="level" value="1" min="1" max="90" onchange="onLevelChange()">
         </div>
       </div>
       <!-- 武器 -->
@@ -232,13 +252,14 @@
       <div class="form-row tight" style="margin-bottom:6px;">
         <div class="form-group">
           <label class="form-label">武器选择</label>
-          <select class="form-input" id="weaponSelect" onchange="onWeaponChange()">
-            <option value="">-- 选择武器 --</option>
-          </select>
+          <div class="combo-box" id="weaponCombo">
+            <input type="text" class="form-input" id="weaponSelect" placeholder="-- 选择武器 --" onchange="onWeaponChange()" autocomplete="off">
+            <div class="combo-dropdown"></div>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">武器等级</label>
-          <input type="number" class="form-input small" id="weaponLevel" value="0" onchange="onWeaponLevelChange()">
+          <input type="number" class="form-input small" id="weaponLevel" value="1" min="1" max="90" onchange="onWeaponLevelChange()">
         </div>
       </div>
       <div class="form-row tight" style="margin-bottom:6px;">
@@ -1462,14 +1483,8 @@
     a[1].attr[89]={strength:161,agility:95,intellect:92,will:111,operatorAtk:294};
     return a;
   })();
-  var EMBEDDED_WEAPONS = (function(){
-    var w=[{weaponName:"理性告别",attr:[],wpBaseAttr:"strength",baseAttr:[],wpSubAttr:"heatDmgUp",subAttr:[],wpSkillLevel:1}];
-    w[0].attr[0]={atk:30};
-    w[0].attr[79]={atk:369};
-    for(var i=0;i<9;i++) w[0].baseAttr[i]={wpBaseVal:[16,28,41,54,67,80,92,105,124][i]};
-    for(var i=0;i<9;i++) w[0].subAttr[i]={wpSubVal:[4.4,8.0,11.6,15.1,18.7,22.2,25.8,29.3,34.7][i]};
-    return w;
-  })();
+  // Minimal embedded fallback; full data loaded from weapon.txt via fetch
+  var EMBEDDED_WEAPONS = [{"weaponName":"理性告别","atk":[42,46,50,54,58,62,66,71,75,79,83,87,91,95,100,104,108,112,116,120,125,129,133,137,141,145,149,154,158,162,166,170,174,178,183,187,191,195,199,203,208,212,216,220,224,228,232,237,241,245,249,253,257,261,266,270,274,278,282,286,291,295,299,303,307,311,315,320,324,328,332,336,340,344,349,353,357,361,365,369,374,378,382,386,390,394,398,403,407,411],"wpBaseAttr":"strength","wpBaseAttrVal":["16","28","41","54","67","80","92","105","124"],"wpSubAttr":"heatDmgUp","wpSubAttrVal":["4.4%","8.0%","11.6%","15.1%","18.7%","22.2%","25.8%","29.3%","34.7%"]}];
 
   let comboLevel = 0;
   let electricDealtLevel = 0;
@@ -1477,6 +1492,79 @@
 
   function toggleCard(header) {
     header.parentElement.classList.toggle('collapsed');
+  }
+
+  // ─── Custom combo-box ───
+  const comboBoxes = {};
+  function initComboBox(id, dataList, getLabel, onChange) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    const input = box.querySelector('input');
+    const dropdown = box.querySelector('.combo-dropdown');
+    if (!input || !dropdown) return;
+    comboBoxes[id] = { input, dropdown, dataList, getLabel, onChange, activeIdx: -1 };
+
+    input.addEventListener('focus', () => filterCombo(id, input.value));
+    input.addEventListener('input', () => filterCombo(id, input.value));
+    input.addEventListener('keydown', (e) => comboKeyNav(id, e));
+    input.addEventListener('blur', () => setTimeout(() => { const dd = comboBoxes[id]?.dropdown; if (dd) dd.classList.remove('show'); }, 150));
+  }
+
+  function filterCombo(id, query) {
+    const cb = comboBoxes[id];
+    if (!cb) return;
+    const dd = cb.dropdown;
+    dd.innerHTML = '';
+    const q = query.toLowerCase().replace(/\s+/g, '');
+    const matches = q ? cb.dataList.filter(item => {
+      const text = cb.getLabel(item).toLowerCase().replace(/\s+/g, '');
+      let pi = 0;
+      for (let ti = 0; ti < text.length && pi < q.length; ti++) { if (q[pi] === text[ti]) pi++; }
+      return pi === q.length;
+    }) : cb.dataList;
+    if (matches.length === 0) { dd.classList.remove('show'); return; }
+    cb.activeIdx = -1;
+    matches.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'combo-option';
+      div.textContent = cb.getLabel(item);
+      div.addEventListener('mousedown', (e) => { e.preventDefault(); selectCombo(id, item); });
+      dd.appendChild(div);
+    });
+    dd.classList.add('show');
+  }
+
+  function comboKeyNav(id, e) {
+    const cb = comboBoxes[id];
+    if (!cb || !cb.dropdown.classList.contains('show')) return;
+    const opts = cb.dropdown.querySelectorAll('.combo-option');
+    if (e.key === 'ArrowDown') { e.preventDefault(); cb.activeIdx = Math.min(cb.activeIdx + 1, opts.length - 1); highlightOpt(opts, cb.activeIdx); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cb.activeIdx = Math.max(cb.activeIdx - 1, 0); highlightOpt(opts, cb.activeIdx); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (cb.activeIdx >= 0) {
+        const item = cb.dataList[cb.dataList.indexOf(cb.dataList.find(it => cb.getLabel(it) === opts[cb.activeIdx].textContent))];
+        if (item) selectCombo(id, item);
+      }
+    }
+    else if (e.key === 'Escape') { cb.dropdown.classList.remove('show'); cb.input.blur(); }
+  }
+
+  function highlightOpt(opts, idx) {
+    opts.forEach((o, i) => o.classList.toggle('active', i === idx));
+  }
+
+  function selectCombo(id, item) {
+    const cb = comboBoxes[id];
+    if (!cb) return;
+    cb.input.value = cb.getLabel(item);
+    cb.dropdown.classList.remove('show');
+    if (cb.onChange) cb.onChange();
+  }
+
+  function updateComboData(id, dataList) {
+    const cb = comboBoxes[id];
+    if (cb) cb.dataList = dataList;
   }
 
   // ─── Element source management ───
@@ -1819,27 +1907,17 @@
   let operatorStatSourceIds = [];
 
   function loadOperators() {
-    const sel = document.getElementById('operatorSelect');
-    if (!sel) return;
     function populate(data) {
       operatorList = data;
-      while (sel.options.length > 1) sel.remove(1);
-      data.forEach((op, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = op.opName;
-        sel.appendChild(opt);
-      });
+      updateComboData('operatorCombo', data);
     }
-    // Synchronous: always load embedded data immediately
-    if (typeof EMBEDDED_OPERATORS !== 'undefined') {
-      populate(EMBEDDED_OPERATORS);
-    }
-    // Async: try to refresh from operator.txt (only works via http://, not file://)
+    if (typeof EMBEDDED_OPERATORS !== 'undefined') { populate(EMBEDDED_OPERATORS); }
+    const inp = document.getElementById('operatorSelect');
+    if (inp) inp.value = '';
     fetch('operator.txt')
       .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(data => { populate(data); })
-      .catch(() => {}); // Silently ignore fetch errors — embedded data already loaded
+      .catch(() => {});
   }
 
   function getOperatorStats(opIdx, level) {
@@ -1886,11 +1964,16 @@
     document.getElementById('operatorAtk').value = 0;
   }
 
+  function findOperatorByName(name) {
+    return operatorList.findIndex(op => op.opName === name);
+  }
+
   function applyOperatorStats() {
     clearOperatorStatSources();
-    const opIdx = parseInt(gv('operatorSelect'));
+    const opName = gv('operatorSelect');
+    const opIdx = findOperatorByName(opName);
     const level = Math.max(1, parseInt(gv('level')) || 1);
-    if (isNaN(opIdx) || !operatorList[opIdx]) { calc(); return; }
+    if (opIdx < 0 || !operatorList[opIdx]) { calc(); return; }
 
     const op = operatorList[opIdx];
     const stats = getOperatorStats(opIdx, level);
@@ -1944,51 +2027,48 @@
   let weaponSourceIds = [];
 
   function loadWeapons() {
-    const sel = document.getElementById('weaponSelect');
-    if (!sel) return;
     function populate(data) {
       weaponList = data;
-      while (sel.options.length > 1) sel.remove(1);
-      data.forEach((wp, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = wp.weaponName;
-        sel.appendChild(opt);
-      });
+      updateComboData('weaponCombo', data);
     }
-    // Synchronous: load embedded data immediately
-    if (typeof EMBEDDED_WEAPONS !== 'undefined') { populate(EMBEDDED_WEAPONS); }
-    // Async: try to refresh from weapon.txt (requires http://)
+    if (typeof EMBEDDED_WEAPONS !== 'undefined' && EMBEDDED_WEAPONS.length) { populate(EMBEDDED_WEAPONS); }
+    const inp = document.getElementById('weaponSelect');
+    if (inp) inp.value = '';
     fetch('weapon.txt')
       .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(data => { populate(data); })
+      .then(data => { if (data && data.length) populate(data); })
       .catch(() => {});
   }
 
   // Direct array index lookup (0-indexed: level 1 → [0], level N → [N-1])
+  function findWeaponByName(name) {
+    return weaponList.findIndex(wp => wp.weaponName === name);
+  }
   function getWeaponAtk(wpIdx, level) {
     const wp = weaponList[wpIdx];
-    if (!wp || !wp.attr) return 0;
+    if (!wp || !wp.atk) return 0;
     const idx = level - 1;
-    return (idx >= 0 && idx < wp.attr.length) ? (wp.attr[idx].atk || 0) : 0;
+    return (idx >= 0 && idx < wp.atk.length) ? (wp.atk[idx] || 0) : 0;
   }
   function getWeaponBaseVal(wpIdx, level) {
     const wp = weaponList[wpIdx];
-    if (!wp || !wp.baseAttr) return 0;
+    if (!wp || !wp.wpBaseAttrVal) return 0;
     const idx = level - 1;
-    return (idx >= 0 && idx < wp.baseAttr.length) ? (wp.baseAttr[idx].wpBaseVal || 0) : 0;
+    if (idx < 0 || idx >= wp.wpBaseAttrVal.length) return 0;
+    return parseFloat(wp.wpBaseAttrVal[idx]) || 0;
   }
   function getWeaponSubVal(wpIdx, level) {
     const wp = weaponList[wpIdx];
-    if (!wp || !wp.subAttr) return 0;
+    if (!wp || !wp.wpSubAttrVal || wp.wpSubAttrVal.length === 0) return 0;
     const idx = level - 1;
-    return (idx >= 0 && idx < wp.subAttr.length) ? (wp.subAttr[idx].wpSubVal || 0) : 0;
+    if (idx < 0 || idx >= wp.wpSubAttrVal.length) return 0;
+    return parseFloat(wp.wpSubAttrVal[idx]) || 0;
   }
 
   function onWeaponLevelChange() {
-    const wIdx = parseInt(gv('weaponSelect'));
-    const wLv = parseInt(gv('weaponLevel')) || 0;
-    if (!isNaN(wIdx) && weaponList[wIdx] && wLv > 0) {
+    const wIdx = findWeaponByName(gv('weaponSelect'));
+    const wLv = parseInt(gv('weaponLevel')) || 1;
+    if (wIdx >= 0 && wLv > 0) {
       document.getElementById('weaponAtk').value = getWeaponAtk(wIdx, wLv);
     } else {
       document.getElementById('weaponAtk').value = 0;
@@ -1997,8 +2077,8 @@
   }
 
   function onWeaponAttrLevelChange() {
-    const wIdx = parseInt(gv('weaponSelect'));
-    if (isNaN(wIdx) || !weaponList[wIdx]) {
+    const wIdx = findWeaponByName(gv('weaponSelect'));
+    if (wIdx < 0) {
       document.getElementById('wpBaseVal').value = 0;
       document.getElementById('wpSubVal').value = 0;
       calc(); return;
@@ -2052,8 +2132,8 @@
   }
 
   function applyWeaponSources(tag) {
-    const wIdx = parseInt(gv('weaponSelect'));
-    const wp = weaponList[wIdx];
+    const wIdx = findWeaponByName(gv('weaponSelect'));
+    const wp = wIdx >= 0 ? weaponList[wIdx] : null;
     if (!wp) return;
 
     if (!tag || tag === 'base') {
@@ -2131,8 +2211,8 @@
 
   function onWeaponChange() {
     clearWeaponSources();
-    const wIdx = parseInt(gv('weaponSelect'));
-    const wp = weaponList[wIdx];
+    const wIdx = findWeaponByName(gv('weaponSelect'));
+    const wp = wIdx >= 0 ? weaponList[wIdx] : null;
     if (!wp) {
       document.getElementById('weaponAtk').value = 0;
       document.getElementById('wpBaseVal').value = 0;
@@ -2143,7 +2223,6 @@
 
     document.getElementById('wpBaseAttr').value = wp.wpBaseAttr || '';
     document.getElementById('wpSubAttr').value = wp.wpSubAttr || '';
-    document.getElementById('wpSkillLevel').value = String(wp.wpSkillLevel || '0');
 
     // Default levels to 1
     document.getElementById('wpBaseLevel').value = '1';
@@ -2152,7 +2231,7 @@
     // Values from data at level 1
     document.getElementById('wpBaseVal').value = getWeaponBaseVal(wIdx, 1);
     document.getElementById('wpSubVal').value = getWeaponSubVal(wIdx, 1);
-    // Weapon ATK at level 1 (exact match or interpolated)
+    // Weapon ATK at level 1
     document.getElementById('weaponAtk').value = getWeaponAtk(wIdx, 1);
 
     applyWeaponSources();
@@ -2958,7 +3037,7 @@
     loadOperators();
     loadWeapons();
     const defaults = {
-      level: 1,
+      level: 1, weaponLevel: 1,
       weaponAtk: 0, operatorAtk: 0, pctWeaponVal: 0,
       basicDmgImprove: 0,
       staggerDealt: 30,
@@ -3282,6 +3361,8 @@
   // Initialize with reset state
   loadOperators();
   loadWeapons();
+  initComboBox('operatorCombo', operatorList, op => op.opName, () => onOperatorChange());
+  initComboBox('weaponCombo', weaponList, wp => wp.weaponName, () => onWeaponChange());
   resetAll();
   applySetBonus3();
 
